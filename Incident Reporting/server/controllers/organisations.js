@@ -1,6 +1,18 @@
 const Organisation = require('../models/Organisation')
 
-async function create(req, res){
+
+async function showOrg(req, res){
+    try{
+        const data = req.body
+        const response = await Organisation.getOrgById(data.Org_Id)
+        res.status(200).json(response)
+
+    }catch(err){
+        res.status(404).json({err: err.message})
+    }
+}
+
+async function createOrg(req, res){
     try{
         const data = req.body
         const newOrg = await Organisation.createOrg(data)
@@ -11,7 +23,7 @@ async function create(req, res){
 }
 
 
-async function update(req, res){
+async function updateOrg(req, res){
     try{
 
         const data = req.body
@@ -25,7 +37,7 @@ async function update(req, res){
 }
 
 
-async function destroy(req, res){
+async function destroyOrg(req, res){
     try{
         const data = req.body
         const response = await Organisation.getOrgById(data.Org_Id)
@@ -37,4 +49,4 @@ async function destroy(req, res){
     }
 }
 
-module.exports = { create, update, destroy }
+module.exports = { createOrg, updateOrg, destroyOrg, showOrg }
