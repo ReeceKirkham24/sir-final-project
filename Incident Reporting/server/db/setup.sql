@@ -1,8 +1,23 @@
-DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Comments;
 DROP TABLE IF EXISTS Tickets;
+DROP TABLE IF EXISTS "User";
 DROP TABLE IF EXISTS Department;
 DROP TABLE IF EXISTS Organisation;
-DROP TABLE IF EXISTS Comments;
+
+CREATE TABLE Organisation (
+    Org_Id INT GENERATED ALWAYS AS IDENTITY,
+    Name VARCHAR(100) NOT NULL,
+    Password_Hash VARCHAR(255) NOT NULL,
+    Is_Account_Active BOOLEAN DEFAULT TRUE,
+    PRIMARY KEY (Org_Id)
+);
+
+CREATE TABLE Department (
+    Department_Id INT GENERATED ALWAYS AS IDENTITY,
+    Name VARCHAR(100) NOT NULL,
+    Description TEXT,
+    PRIMARY KEY (Department_Id)
+);
 
 CREATE TABLE "User" (
     User_Id INT GENERATED ALWAYS AS IDENTITY,
@@ -28,23 +43,6 @@ CREATE TABLE Tickets (
     PRIMARY KEY (Ticket_Id),
     FOREIGN KEY (User_Id) REFERENCES "User"(User_Id)
 );
-
-CREATE TABLE Department (
-    Department_Id INT GENERATED ALWAYS AS IDENTITY,
-    Name VARCHAR(100) NOT NULL,
-    Description TEXT,
-    PRIMARY KEY (Department_Id)
-);
-
-
-CREATE TABLE Organisation (
-    Org_Id INT GENERATED ALWAYS AS IDENTITY,
-    Name VARCHAR(100) NOT NULL,
-    Password_Hash VARCHAR(255) NOT NULL,
-    Is_Account_Active BOOLEAN DEFAULT TRUE,
-    PRIMARY KEY (Org_Id)
-);
-
 
 CREATE TABLE Comments (
     Comment_Id INT GENERATED ALWAYS AS IDENTITY,
