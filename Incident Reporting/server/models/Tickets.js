@@ -1,11 +1,11 @@
-const db = require('../db/connect')
+const db = require('../db/')
 
 class Ticket{
     constructor({ticketId, textContent, severityLevel, userId}){
-        this.ticketId = ticketId;
-        this.textContent = textContent;
-        this.severityLevel = severityLevel;
-        this.userId = userId;
+        this.ticketId = ticketId
+        this.textContent = textContent
+        this.severityLevel = severityLevel
+        this.userId = userId
     }
 
     static async getAll() {
@@ -36,20 +36,20 @@ class Ticket{
     }
 
     async update(data){
-        const { textContent, severityLevel, userId } = data;
+        const { textContent, severityLevel, userId } = data
         const response = await db.query("UPDATE tickets SET textContent = $1, severityLevel = $2, userId = $3 WHERE RETURNING *;",[textContent, severityLevel, userId]
-        );
+        )
         if (response.rows.length !== 1) {
-            throw Error("Unable to update ticket");
+            throw Error("Unable to update ticket")
         }
-        return new Ticket(response.rows[0]);
+        return new Ticket(response.rows[0])
     }
     
     async destroy(){
         try {
-            const response = await db.query("DELETE FROM tickets WHERE ticketId = $1", [this.ticketId])
+            const response = await db.query("DELETE FROM tickets WHERE ticketId = $1;", [this.ticketId])
         } catch (error) {
-            throw Error("Cannot delete")
+            throw Error("Cannot delete ticket")
         }
     }
 }
