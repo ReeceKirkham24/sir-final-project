@@ -16,7 +16,7 @@ class User {
     static async createUser(userData){
         const { Name, Email, Org_Id, Department_Id, Password_Hash } = userData
         // pull out the keys that exist in the userData object that we parse into this models params ( it will be the user inputted data)
-        const response = await db.query('INSERT INTO user(Name, Email, Org_Id, Department_Id, Password_Hash) VALUES($1, $2, $3, $4, $5) RETURNING *', [Name, Email, Org_Id, Department_Id, Password_Hash])
+        const response = await db.query('INSERT INTO User(Name, Email, Org_Id, Department_Id, Password_Hash) VALUES($1, $2, $3, $4, $5) RETURNING *', [Name, Email, Org_Id, Department_Id, Password_Hash])
         if(response.rows == 0){
             throw new Error("Failed to create user")
         }
