@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 
-const logger = require("");
+const logger = require("./middleware/logger");
 
 const app = express();
 app.use(express.json())
