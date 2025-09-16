@@ -38,7 +38,7 @@ class Organisation{
     }
 
     async deleteOrganisation(){
-        const response = await db.query('DELETE * FROM organisation WHERE id = $1', [data.id])
+        const response = await db.query('DELETE * FROM organisation WHERE id = $1', [this.Org_Id])
         return new Organisation(response.rows[0])
     }
 
