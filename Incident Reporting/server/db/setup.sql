@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS Comments;
 DROP TABLE IF EXISTS Tickets;
-DROP TABLE IF EXISTS "User";
+DROP TABLE IF EXISTS "user";
 DROP TABLE IF EXISTS Department;
 DROP TABLE IF EXISTS Organisation;
 
@@ -19,7 +19,7 @@ CREATE TABLE Department (
     PRIMARY KEY (Department_Id)
 );
 
-CREATE TABLE "User" (
+CREATE TABLE "user" (
     User_Id INT GENERATED ALWAYS AS IDENTITY,
     Name VARCHAR(255) NOT NULL, --maybe first name and last name
     Email VARCHAR(255) UNIQUE NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE Tickets (
     Date_Created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     Date_Completed TIMESTAMP,
     PRIMARY KEY (Ticket_Id),
-    FOREIGN KEY (User_Id) REFERENCES "User"(User_Id)
+    FOREIGN KEY (User_Id) REFERENCES "user"(User_Id)
 );
 
 CREATE TABLE Comments (
@@ -51,7 +51,7 @@ CREATE TABLE Comments (
     Body TEXT NOT NULL,
     PRIMARY KEY (Comment_Id),
     FOREIGN KEY (Ticket_Id) REFERENCES Tickets(Ticket_Id),
-    FOREIGN KEY (User_Id) REFERENCES "User"(User_Id)
+    FOREIGN KEY (User_Id) REFERENCES "user"(User_Id)
 );
 
 
@@ -73,7 +73,7 @@ VALUES
 ('Academic Services', 'Supports students and faculty');
 
 -- Users
-INSERT INTO "User" (Name, Email, Org_Id, Department_Id, Password_Hash)
+INSERT INTO "user" (Name, Email, Org_Id, Department_Id, Password_Hash)
 VALUES
 ('Alice Johnson', 'alice@techcorp.com', 1, 1, 'pw_hash1'),
 ('Bob Smith', 'bob@techcorp.com', 1, 2, 'pw_hash2'),
