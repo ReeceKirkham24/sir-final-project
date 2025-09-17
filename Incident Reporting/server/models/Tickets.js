@@ -1,55 +1,63 @@
-const db = require('../db/')
+const db = require('../db/connect')
 
-class Ticket{
-    constructor({ticketId, textContent, severityLevel, userId}){
-        this.ticketId = ticketId
-        this.textContent = textContent
-        this.severityLevel = severityLevel
-        this.userId = userId
+class Ticket {
+    constructor({ ticket_id, status, text, severity, category, user_id, date_created, date_completed }) {
+        this.ticket_id = ticket_id;
+        this.status = status;
+        this.text = text;
+        this.severity = severity;
+        this.category = category;
+        this.user_id = user_id;
+        this.date_created = date_created;
+        this.date_completed = date_completed;
     }
 
     static async getAll() {
-        const response = await db.query("SELECT * FROM tickets;")
+        const response = await db.query("SELECT * FROM tickets;");
         if (response.rows.length === 0) {
-            throw Error("No tickets available")
+            throw Error("No tickets available");
         }
-        return response.rows.map(ticket => new Ticket(ticket))
+        return response.rows.map(ticket => new Ticket(ticket));
     }
 
-    static async getOneByID(ticket) {
-        const response = await db.query("SELECT * FROM tickets WHERE ticketId = $1;", [ticket])
+    static async getOneByID(ticket_id) {
+        const response = await db.query("SELECT * FROM tickets WHERE ticket_id = $1;", [ticket_id]);
         if (response.rows.length !== 1) {
-            throw Error("Unable to locate ticket")
+            throw Error("Unable to locate ticket");
         }
-        return new Ticket(response.rows[0])
+        return new Ticket(response.rows[0]);
     }
 
-    static async create(data){
-        const {textContent, severityLevel, userId} = data
-        const existingUser = await db.query("SELECT userId FROM users WHERE userId = $1;", [userId])
-        
+    static async create(data) {
+        const { status, text, severity, category, user_id } = data;
+        const existingUser = await db.query("SELECT user_id FROM user WHERE user_id = $1;", [user_id]);
         if (existingUser.rows.length === 0) {
-            throw Error("A user with this ID does not exist")
+            throw Error("A user with this ID does not exist");
         }
-        const response = await db.query("INSERT INTO tickets (textContent, severityLevel, userId) VALUES ($1, $2, $3) RETURNING *;", [textContent, severityLevel, userId])
-            return new Ticket(response.rows[0])
+        const response = await db.query(
+            'INSERT INTO tickets (status, text, severity, category, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *;',
+            [status, text, severity, category, user_id]
+        );
+        return new Ticket(response.rows[0]);
     }
 
-    async update(data){
-        const { textContent, severityLevel, userId } = data
-        const response = await db.query("UPDATE tickets SET textContent = $1, severityLevel = $2, userId = $3 WHERE RETURNING *;",[textContent, severityLevel, userId]
-        )
+    async update(data) {
+        const { status, text, severity, category, user_id } = data;
+        const response = await db.query(
+            'UPDATE tickets SET status = $1, text = $2, severity = $3, category = $4, user_id = $5 WHERE ticket_id = $6 RETURNING *;',
+            [status, text, severity, category, user_id, this.ticket_id]
+        );
         if (response.rows.length !== 1) {
-            throw Error("Unable to update ticket")
+            throw Error("Unable to update ticket");
         }
-        return new Ticket(response.rows[0])
+        return new Ticket(response.rows[0]);
     }
     
-    async destroy(){
+    async destroy() {
         try {
-            const response = await db.query("DELETE FROM tickets WHERE ticketId = $1;", [this.ticketId])
+            await db.query('DELETE FROM tickets WHERE ticket_id = $1;', [this.ticket_id]);
         } catch (error) {
-            throw Error("Cannot delete ticket")
+            throw Error("Cannot delete ticket");
         }
     }
 }

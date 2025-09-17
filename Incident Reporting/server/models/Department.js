@@ -1,3 +1,5 @@
+const db = require('../db/connect')
+
 const { response } = require('express')
 
 class Department{
@@ -11,7 +13,7 @@ class Department{
 
 
     static async getAll(org_id){
-        const response = await db.query('SELECT * FROM departments WHERE org_id = $1', [org_id])
+        const response = await db.query('SELECT * FROM department WHERE org_id = $1', [org_id])
         if(response.rows.length == 0){
             throw Error("No departments currently exist")
         }return response.rows.map((department) => new Department(department))

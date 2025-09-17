@@ -64,13 +64,13 @@ VALUES
 ('Health Systems', 'hash_org2', TRUE),
 ('EduWorld', 'hash_org3', FALSE);
 
--- departments
-INSERT INTO department (name, description)
+-- Departments
+INSERT INTO department (name, description, org_id)
 VALUES
-('IT Support', 'Handles technical issues'),
-('HR', 'Manages employee relations'),
-('Finance', 'Manages budgets and payroll'),
-('Academic Services', 'Supports students and faculty');
+('IT Support', 'Handles technical issues', 1),
+('HR', 'Manages employee relations', 1),
+('Finance', 'Manages budgets and payroll', 3),
+('Academic Services', 'Supports students and faculty', 2);
 
 -- users
 INSERT INTO "user" (name, email, org_id, department_id, password_hash)
