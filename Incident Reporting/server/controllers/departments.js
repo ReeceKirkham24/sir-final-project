@@ -21,11 +21,23 @@ async function createDep(req, res){
     }
 }
 
+
+async function updateDep(req, res){
+    try{
+        const data = req.body
+        const response = await Department.getDepById(data.Department_Id)
+        const result = await response.update(data.Name)
+        res.status(200).json(result)
+    }catch(err){
+        res.status(400).json({err: err.message})
+    }
+}
+
 async function destroyDep(req, res){
      try{
         const data = req.body
         const response = await Department.getDepById(data.Department_Id)
-        const result = response.delete()
+        const result = response.end()
         res.status(204).end()
         
     }catch(err){
@@ -37,4 +49,4 @@ async function destroyDep(req, res){
 
 
 
-module.exports = { index, createDep, destroyDep }
+module.exports = { index, createDep, destroyDep, updateDep }

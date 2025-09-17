@@ -32,6 +32,14 @@ class Department{
         } return new Department(response.rows[0])
     }
 
+    async update(data){
+        const response = await db.query('UPDATE department SET Name = $1 WHERE Name = $2', [this.Name, data.Name])
+        if(response.rows.length == 0){
+            throw new Error('Cannot find a department with this name')
+        }return new Department(response.rows[0])
+    }
+
+
     async delete(){
         const response = await db.query('DELETE * FROM department WHERE Department_Id = $1', [this.Department_Id])
         return new Department(response.rows[0])
