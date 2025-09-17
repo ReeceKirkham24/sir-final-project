@@ -16,7 +16,9 @@ CREATE TABLE Department (
     Department_Id INT GENERATED ALWAYS AS IDENTITY,
     Name VARCHAR(100) NOT NULL,
     Description TEXT,
-    PRIMARY KEY (Department_Id)
+    Org_Id INT NOT NULL,
+    PRIMARY KEY (Department_Id),
+    FOREIGN KEY (Org_Id) REFERENCES Organisation(Org_Id)
 );
 
 CREATE TABLE "user" (
@@ -65,12 +67,12 @@ VALUES
 ('EduWorld', 'hash_org3', FALSE);
 
 -- Departments
-INSERT INTO Department (Name, Description)
+INSERT INTO Department (Name, Description, Org_Id)
 VALUES
-('IT Support', 'Handles technical issues'),
-('HR', 'Manages employee relations'),
-('Finance', 'Manages budgets and payroll'),
-('Academic Services', 'Supports students and faculty');
+('IT Support', 'Handles technical issues', 1),
+('HR', 'Manages employee relations', 1),
+('Finance', 'Manages budgets and payroll', 3),
+('Academic Services', 'Supports students and faculty', 2);
 
 -- Users
 INSERT INTO "user" (Name, Email, Org_Id, Department_Id, Password_Hash)

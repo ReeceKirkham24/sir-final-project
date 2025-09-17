@@ -3,7 +3,7 @@ const Department = require('../models/Department')
 async function index(req, res){
     try{
         const data = req.body
-        const response = await Department.getAll(data.Org_Id)
+        const response = await Department.getAll(data.org_id)
         res.status(200).json(response)
     }catch(err){
         res.status(404).json({ err: err.message })

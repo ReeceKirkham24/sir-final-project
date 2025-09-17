@@ -4,8 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-  "dev": "nodemon -L \"Incident Reporting/server/index.js\"",
-  "start": "node \"Incident Reporting/server/index.js\""
+    "dev": "nodemon -L \"Incident Reporting/server/index.js\"",
+    "start": "node \"Incident Reporting/server/index.js\"",
+    "setup-db": "node \"Incident Reporting/server/db/setup.js\""
   },
   "keywords": [],
   "author": "",
