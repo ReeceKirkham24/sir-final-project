@@ -1,4 +1,4 @@
-const db = require('../db/')
+const db = require('../db/connect')
 
 class Ticket{
     constructor({ticketId, textContent, severityLevel, userId}){
