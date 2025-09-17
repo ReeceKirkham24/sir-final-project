@@ -1,3 +1,5 @@
+const db = require('../db/connect')
+
 const { response } = require('express')
 
 class Department{
