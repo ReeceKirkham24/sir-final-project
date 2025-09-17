@@ -27,7 +27,7 @@ async function show(req, res){
 async function createDep(req, res){
     try{
         const data = req.body
-        const response = await Department.createDep(data.Org_Id)
+        const response = await Department.createDep(data)
         res.status(201).json(response)
         
     }catch(err){

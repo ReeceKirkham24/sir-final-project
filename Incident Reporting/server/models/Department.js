@@ -1,39 +1,39 @@
 const { response } = require('express')
 
 class Department{
-    constructor({Department_Id, Name, Description, Org_Id }){
-        this.Department_Id = Department_Id
-        this.Name = Name
-        this.Description = Description
-        this.Org_Id = Org_Id
+    constructor({department_id, name, description, org_id }){
+        this.department_id = department_id
+        this.name = name
+        this.description = description
+        this.org_id = org_id
     }
 
 
 
-    static async getAll(Org_Id){
-        const response = await db.query('SELECT * FROM departments WHERE Org_Id = $1', [Org_Id])
+    static async getAll(org_id){
+        const response = await db.query('SELECT * FROM departments WHERE org_id = $1', [org_id])
         if(response.rows.length == 0){
             throw Error("No departments currently exist")
         }return response.rows.map((department) => new Department(department))
     }
 
-    static async getDepById(Department_Id){
-        const response = await db.query('SELECT * FROM department WHERE Department_Id = $1', [Department_Id])
+    static async getDepById(department_id){
+        const response = await db.query('SELECT * FROM department WHERE department_id = $1', [department_id])
         if(response.rows.length != 1){
             throw Error("Could not find department with this ID, or there a duplicates")
         } return new Department(response)
     }
 
 
-    static async createDep(Org_Id){
-        const response = await db.query('INSERT INTO department (Name, Description, Org_Id) VALUES ($1, $2, $3) RETURNING *', [Name, Description, Org_Id])
+    static async createDep(data){
+        const response = await db.query('INSERT INTO department (name, description, org_id) VALUES ($1, $2, $3) RETURNING *', [data.name, data.description, data.org_id])
         if(response.rows.length == 0){
             throw Error("Failed to create this department")
         } return new Department(response.rows[0])
     }
 
     async update(data){
-        const response = await db.query('UPDATE department SET Name = $1 WHERE Name = $2', [this.Name, data.Name])
+        const response = await db.query('UPDATE department SET name = $1 WHERE name = $2', [this.name, data.name])
         if(response.rows.length == 0){
             throw new Error('Cannot find a department with this name')
         }return new Department(response.rows[0])
@@ -41,7 +41,7 @@ class Department{
 
 
     async delete(){
-        const response = await db.query('DELETE * FROM department WHERE Department_Id = $1', [this.Department_Id])
+        const response = await db.query('DELETE * FROM department WHERE department_id = $1', [this.department_id])
         return new Department(response.rows[0])
     }
 }
