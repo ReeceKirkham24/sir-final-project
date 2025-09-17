@@ -4,7 +4,7 @@ const cors = require("cors");
 const ticketRouter = require('./routers/ticket')
 const commentRouter = require('./routers/comment')
 
-const logger = require("");
+const logger = require("./middleware/logger");
 
 const app = express();
 app.use(express.json())
@@ -20,5 +20,7 @@ app.get("/", (req, res) => {
     description: "Where incidents are reported, stored in a central database, and prioritized automatically"
   })
 })
+
+app.use("/user", userRouter);
 
 module.exports = app;
