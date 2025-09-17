@@ -10,6 +10,20 @@ async function index(req, res){
     }
 }
 
+
+async function show(req, res){
+    try{
+        const data = req.body
+        const response = await Department.getDepById(data.Department_Id)
+        res.status(200).json(response)
+
+    }catch(err){
+        res.status(404).json({ err: err.message })
+    }
+}
+
+
+
 async function createDep(req, res){
     try{
         const data = req.body
@@ -49,4 +63,4 @@ async function destroyDep(req, res){
 
 
 
-module.exports = { index, createDep, destroyDep, updateDep }
+module.exports = { index, show, createDep, destroyDep, updateDep }
