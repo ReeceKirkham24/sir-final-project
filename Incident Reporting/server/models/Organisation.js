@@ -1,4 +1,4 @@
-const { response } = require('express')
+const db = require('../db/connect')
 
 class Organisation{
     constructor({ Org_Id, Name, Password_Hash, Is_Account_Active }){
