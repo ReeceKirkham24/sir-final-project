@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S.I.R – Security Incidence Response</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <ul>
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#org-login">Organisation Sign In</a></li>
+      <li><a href="#user-login">User Sign In</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="scroll-container">
+
+    <!-- SECTION 1: Hero / Title -->
+    <section class="section hero" id="hero">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>S.I.R</h1>
+        <h2>Security Incidence Response</h2>
+        <div class="tagline">Secure. Track. Respond.</div>
+        <div class="scroll-arrow">⌄</div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Organisation Login -->
+    <section class="section login-section" id="org-login">
+      <div class="login-overlay"></div>
+      <div class="login-container">
+        <div class="login-form">
+          <h2><i class="fas fa-briefcase"></i> Organisation Login</h2>
+          <form>
+            <input type="email" placeholder="Organisation Email" required />
+            <input type="password" placeholder="Password" required />
+            <button type="submit">Login</button>
+          </form>
+          <a href="org-signup.html" class="black-link">Create Organisation Account</a>
+        </div>
+        <div class="login-info">
+          <h3>What you can do as an Organisation</h3>
+          <ul>
+            <li>Create departments and users</li>
+            <li>Track all incidents in real-time</li>
+            <li>View severity rankings and reports</li>
+            <li>Get predictive insights to prevent issues</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: User Login -->
+    <section class="section login-section" id="user-login">
+      <div class="login-overlay"></div>
+      <div class="login-container">
+        <div class="login-form">
+          <h2><i class="fas fa-user"></i> User Login</h2>
+          <form>
+            <input type="email" placeholder="User Email" required />
+            <input type="password" placeholder="Password" required />
+            <button type="submit">Login</button>
+          </form>
+          <a href="user-signup.html" class="black-link">Create User Account</a>
+        </div>
+        <div class="login-info">
+          <h3>What you can do as a User</h3>
+          <ul>
+            <li>Submit incident tickets</li>
+            <li>Track ticket status in real-time</li>
+            <li>Receive alerts on severity updates</li>
+            <li>Access historical data and reports</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: About / Features -->
+    <section class="section about" id="about">
+      <div class="about-overlay"></div>
+      <div class="about-content">
+        <h2>About S.I.R</h2>
+        <p>
+          Organisations with distributed teams face significant challenges in logging,
+          tracking, and responding to security, technical, and operational incidents
+          in real time. S.I.R provides a centralised incident management system where
+          organisations can create accounts, departments, and users.
+        </p>
+        <p>
+          Our platform enables seamless ticket creation, automatic severity ranking,
+          and powerful data visualisations over time. Going beyond basic reporting,
+          S.I.R also leverages predictive analytics to forecast risks, detect recurring
+          issues, and provide proactive insights to administrators.
+        </p>
+        <div class="feature-cards">
+          <div class="feature-card">
+            <h3><i class="fas fa-clock"></i> Real-Time Incident Tracking</h3>
+            <p>Track incidents as they happen with live updates and alerts.</p>
+          </div>
+          <div class="feature-card">
+            <h3><i class="fas fa-exclamation-triangle"></i> Severity Analysis</h3>
+            <p>Automatically rank incidents to prioritize what matters most.</p>
+          </div>
+          <div class="feature-card">
+            <h3><i class="fas fa-chart-line"></i> Predictive Insights</h3>
+            <p>Forecast risks and detect recurring issues using predictive analytics.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Smooth Scroll Script -->
+  <script>
+    document.querySelectorAll('nav a').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
+
+</body>
+</html>
