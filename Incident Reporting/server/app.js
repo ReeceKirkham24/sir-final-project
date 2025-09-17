@@ -15,6 +15,6 @@ app.get("/", (req, res) => {
   })
 })
 
-app.use("/users", userRouter);
+app.use("/user", userRouter);
 
 module.exports = app;
