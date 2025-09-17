@@ -1,9 +1,7 @@
-require("dotenv").config();
-// for when we use env variables
+require('dotenv').config()
+const app = require('./app')
 
-const app = require('./app');
-const port = 3000;
-
+const port = process.env.PORT
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`)
 })
