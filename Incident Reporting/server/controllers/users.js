@@ -11,8 +11,8 @@ async function index(req, res) {
 
 async function show(req, res) {
     try {
-        let name = req.params.name;
-        const user = await User.getOneByUserName(name);
+        const data = req.body
+        const user = await User.getOneByUserId(data.user_id);
         res.status(200).json(user);
     }
     catch (err) {
@@ -34,7 +34,7 @@ async function update (req, res) {
     try {
         // const name = req.params.name;
         const data = req.body;
-        const user = await User.getOneByUserName(data.name);
+        const user = await User.getOneByUserId(data.user_id);
         const result = await user.update(data);
         res.status(200).json(result);
     } catch (err) {
@@ -44,9 +44,9 @@ async function update (req, res) {
 
 async function destroy (req, res) {
     try {
-        const name = req.params.name 
-        const user = await User.getOneByUserName(name)
-        const result = await user.destroy()
+        const data = req.body
+        const user = await User.getOneByUserId(data.user_id)
+        const result = await user.destroy(data)
         res.status(204).end()
     } catch (err) {
         res.status(404).json({ error: err.message })

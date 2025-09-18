@@ -21,10 +21,10 @@ class User {
     return response.rows.map((user) => new User(user));
   }
 
-  static async getOneByUserName(userName) {
+  static async getOneByUserId(user_id) {
     const response = await db.query(
-      'SELECT * FROM "user" WHERE LOWER(name) = LOWER($1);',
-      [userName]
+      'SELECT * FROM "user" WHERE user_id = $1;',
+      [user_id]
     );
     if (response.rows.length !== 1) {
       throw Error("Unable to locate user");
@@ -65,6 +65,14 @@ class User {
       throw new Error("Unable to update entries");
     }
     return new User(response.rows[0]);
+  }
+
+
+  async destroy(data){
+    const response = await db.query('UPDATE "user" SET email = $1, password_hash = $2, name = $3 WHERE user_id = $4 RETURNING *', [data.email, data.password_hash, data.name, data.user_id])
+    if(response.rows.length != 1){
+      throw new Error("Unable to locate user you wish to destroy")
+    } return new User(response.rows[0])
   }
 }
 
