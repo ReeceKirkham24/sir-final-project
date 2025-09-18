@@ -21,10 +21,10 @@ class User {
     return response.rows.map((user) => new User(user));
   }
 
-  static async getOneByUserName(userName) {
+  static async getOneByUserId(user_id) {
     const response = await db.query(
-      'SELECT * FROM "user" WHERE LOWER(name) = LOWER($1);',
-      [userName]
+      'SELECT * FROM "user" WHERE user_id = $1;',
+      [user_id]
     );
     if (response.rows.length !== 1) {
       throw Error("Unable to locate user");
