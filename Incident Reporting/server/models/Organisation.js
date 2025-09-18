@@ -1,6 +1,5 @@
 const db = require('../db/connect')
 
-const { response } = require('express')
 
 class Organisation{
     constructor({ org_id, name, password_hash, is_account_active }){

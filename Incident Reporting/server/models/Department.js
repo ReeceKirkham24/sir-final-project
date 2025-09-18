@@ -1,7 +1,5 @@
 const db = require('../db/connect')
 
-const { response } = require('express')
-
 class Department{
     constructor({department_id, name, description, org_id }){
         this.department_id = department_id
