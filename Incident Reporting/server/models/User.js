@@ -66,6 +66,14 @@ class User {
     }
     return new User(response.rows[0]);
   }
+
+
+  async destroy(data){
+    const response = await db.query('UPDATE "user" SET email = $1, password_hash = $2, name = $3 WHERE user_id = $4 RETURNING *', [data.email, data.password_hash, data.name, data.user_id])
+    if(response.rows.length != 1){
+      throw new Error("Unable to locate user you wish to destroy")
+    } return new User(response.rows[0])
+  }
 }
 
 module.exports = User;

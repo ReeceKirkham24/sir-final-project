@@ -46,7 +46,7 @@ async function destroy (req, res) {
     try {
         const data = req.body
         const user = await User.getOneByUserId(data.user_id)
-        const result = await user.destroy()
+        const result = await user.destroy(data)
         res.status(204).end()
     } catch (err) {
         res.status(404).json({ error: err.message })
