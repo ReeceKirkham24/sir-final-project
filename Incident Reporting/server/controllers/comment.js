@@ -38,7 +38,7 @@ async function update(req, res) {
         const result = await comment.update(data)
         res.status(200).json(result)
     } catch (error) {
-        res.status(404).json({ error: err.message })
+        res.status(404).json({ error: error.message })
     }
 }
 
