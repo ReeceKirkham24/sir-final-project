@@ -1,11 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 
-const userRouter = require("./routers/users")
-const ticketRouter = require('./routers/ticket')
-const commentRouter = require('./routers/comment')
 
 const logger = require("./middleware/logger");
+
+const ticketRouter = require('./routers/ticket')
+const commentRouter = require('./routers/comment')
+const organisationRouter = require("./routers/organisations");
+const userRouter = require("./routers/users");
+const departmentRouter = require("./routers/department");
 
 const app = express();
 app.use(express.json())
@@ -14,6 +17,9 @@ app.use(logger);
 
 app.use('/ticket', ticketRouter)
 app.use('/comment', commentRouter)
+app.use("/user", userRouter);
+app.use("/organisation", organisationRouter);
+app.use('/department', departmentRouter)
 
 app.get("/", (req, res) => {
   res.status(200).json({
@@ -22,6 +28,5 @@ app.get("/", (req, res) => {
   })
 })
 
-app.use("/user", userRouter);
 
 module.exports = app;

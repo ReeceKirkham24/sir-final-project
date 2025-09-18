@@ -1,10 +1,10 @@
 const db = require('../db/connect')
 
 class Comment{
-    constructor({commentId, ticketId, userId, body}){
-        this.commentId=commentId
-        this.ticketId=ticketId
-        this.userId=userId
+    constructor({commentid, ticketid, userid, body}){
+        this.commentid=commentid
+        this.ticketid=ticketid
+        this.userid=userid
         this.body=body
     }
 
@@ -17,7 +17,7 @@ class Comment{
     }
 
     static async getOneByID(comment) {
-        const response = await db.query("SELECT * FROM comments WHERE commentId = $1;", [comment])
+        const response = await db.query("SELECT * FROM comments WHERE commentid = $1;", [comment])
         if (response.rows.length !== 1) {
             throw Error("Unable to locate comment")
         }
@@ -25,25 +25,25 @@ class Comment{
     }
 
     static async create(data){
-        const {ticketId, userId, body} = data
+        const {ticketid, userid, body} = data
 
-        const existingUser = await db.query("SELECT userId FROM users WHERE userId = $1;", [userId])
+        const existingUser = await db.query("SELECT userid FROM users WHERE userid = $1;", [userid])
         if (existingUser.rows.length === 0) {
             throw Error("A user with this ID does not exist")
         }
 
-        const existingTicket = await db.query("SELECT ticketId FROM tickets WHERE ticketId = $1;", [ticketId])
+        const existingTicket = await db.query("SELECT ticketid FROM tickets WHERE ticketid = $1;", [ticketid])
         if (existingTicket.rows.length === 0) {
             throw Error("A ticket with this ID does not exist")
         }
 
-        const response = await db.query("INSERT INTO comments (ticketId, userId, body) VALUES ($1, $2, $3) RETURNING *;", [ticketId, userId, body])
+        const response = await db.query("INSERT INTO comments (ticketid, userid, body) VALUES ($1, $2, $3) RETURNING *;", [ticketid, userid, body])
             return new Comment(response.rows[0])
     }
 
     async update(data){
-        const {ticketId, userId, body} = data
-        const response = await db.query("UPDATE comments SET ticketId = $1, userId = $2, body = $3 WHERE RETURNING *;", [ticketId, userId, body])
+        const {ticketid, userid, body} = data
+        const response = await db.query("UPDATE comments SET ticketid = $1, userid = $2, body = $3 WHERE RETURNING *;", [ticketid, userid, body])
         if(response.rows.length !== 1){
             throw Error("Unable to locate comment")
         }
@@ -52,7 +52,7 @@ class Comment{
 
     async destroy(){
         try {
-            const response = await db.query("DELETE FROM comments WHERE commentId = $1;", [this.commentId])
+            const response = await db.query("DELETE FROM comments WHERE commentid = $1;", [this.commentid])
         } catch (error) {
             throw Error("Cannot delete comment")
         }

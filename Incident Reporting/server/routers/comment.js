@@ -1,6 +1,6 @@
 const { Router } = require('express')
 
-const commentController = require('../controllers/ticket')
+const commentController = require('../controllers/comment')
 
 const commentRouter = Router()
 

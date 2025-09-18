@@ -4,8 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll --verbose --detectOpenHandles --runInBand",
-    "dev": "nodemon -L ./server/index.js",
-    "setup-db": "node ./server/db/setup.js"
+    "dev": "nodemon -L \"Incident Reporting/server/index.js\"",
+    "start": "node \"Incident Reporting/server/index.js\"",
+    "setup-db": "node \"Incident Reporting/server/db/setup.js\""
   },
   "keywords": [],
   "author": "",
