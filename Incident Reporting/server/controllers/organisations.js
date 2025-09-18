@@ -28,7 +28,7 @@ async function updateOrg(req, res){
 
         const data = req.body
         const response = await Organisation.getOrgById(data.org_id)
-        const result = response.changeOrgName(data)
+        const result = await response.changeOrgName(data)
         res.status(200).json(result)
     }catch(err){
         res.status(404).json({error: err.message})

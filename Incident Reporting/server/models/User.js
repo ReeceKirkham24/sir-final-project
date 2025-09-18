@@ -1,7 +1,5 @@
 const db = require("../db/connect") 
 
-const { response } = require("../app");
-
 class User {
   constructor({ user_id, name, email, org_id, department_id, password_hash }) {
     this.user_id = user_id;

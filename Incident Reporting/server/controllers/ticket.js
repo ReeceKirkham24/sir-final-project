@@ -4,8 +4,8 @@ async function index(req, res) {
     try {
         const tickets = await Ticket.getAll()
         res.status(200).json(tickets)
-    } catch (error) {
-        res.status(500).json({error: error.message})
+    } catch (err) {
+        res.status(500).json({error: err.message})
     }
 }
 
@@ -14,8 +14,8 @@ async function showId(req, res) {
         let id = parseInt(req.params.id)
         const ticket = await Ticket.getOneByID(id)
         res.status(200).json(ticket)
-    } catch (error) {
-        res.status(404).json({error: error.message})
+    } catch (err) {
+        res.status(404).json({error: err.message})
     }
 }
 
@@ -24,8 +24,8 @@ async function create(req, res) {
         const data = req.body
         const newTicket = await Ticket.create(data)
         res.status(201).json(newTicket)
-    } catch (error) {
-        res.status(400).json({error: error.message})
+    } catch (err) {
+        res.status(400).json({error: err.message})
     }
 }
 
@@ -36,7 +36,7 @@ async function update(req, res) {
         const ticket = await Ticket.getOneByID(id)
         const result = await ticket.update(data)
         res.status(200).json(result)
-    } catch (error) {
+    } catch (err) {
         res.status(404).json({ error: err.message })
     }
 }
@@ -47,8 +47,8 @@ async function destroy(req, res) {
         const ticket = await Ticket.getOneByID(id)
         await ticket.destroy()
         res.status(204).end()
-    } catch (error) {
-        res.status(404).json({ error: error.message })
+    } catch (err) {
+        res.status(404).json({ error: err.message })
     }
 }
 
