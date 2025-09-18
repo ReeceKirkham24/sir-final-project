@@ -1,5 +1,6 @@
 const User = require("../models/User");
 
+
 async function index(req, res) {
   try {
     const users = await User.getAll();

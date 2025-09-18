@@ -1,4 +1,5 @@
 const Organisation = require('../models/Organisation')
+const bcrypt = require("bcryptjs");
 
 
 async function showOrg(req, res){
@@ -15,6 +16,8 @@ async function showOrg(req, res){
 async function createOrg(req, res){
     try{
         const data = req.body
+        const hashedPass = await bcrypt.hash(data.password_hash, 4)
+        data.password_hash = hashedPass
         const newOrg = await Organisation.createOrg(data)
         res.status(201).json(newOrg)
     }catch(err){

@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS organisation;
 
 CREATE TABLE organisation (
     org_id INT GENERATED ALWAYS AS IDENTITY,
+    email VARCHAR(100) , 
     name VARCHAR(100) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     is_account_active BOOLEAN DEFAULT TRUE,
@@ -16,7 +17,9 @@ CREATE TABLE department (
     department_id INT GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(100) NOT NULL,
     description TEXT,
-    PRIMARY KEY (department_id)
+    org_id INT NOT NULL,
+    PRIMARY KEY (department_id),
+    FOREIGN KEY (org_id) REFERENCES organisation(org_id)
 );
 
 CREATE TABLE "user" (
@@ -58,11 +61,11 @@ CREATE TABLE comments (
 --Seed Data
 
 -- organisations
-INSERT INTO organisation (name, password_hash, is_account_active)
+INSERT INTO organisation (name, password_hash, is_account_active, email)
 VALUES 
-('Tech Corp', 'hash_org1', TRUE),
-('Health Systems', 'hash_org2', TRUE),
-('EduWorld', 'hash_org3', FALSE);
+('Tech Corp', 'hash_org1', TRUE, 'Techcorp@gmail.com'),
+('Health Systems', 'hash_org2', TRUE, 'Healthsystems@gmail.com'),
+('EduWorld', 'hash_org3', FALSE, 'Eduworld@outlook.com');
 
 -- Departments
 INSERT INTO department (name, description, org_id)

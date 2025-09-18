@@ -3,11 +3,12 @@ const db = require('../db/connect')
 const { response } = require('express')
 
 class Organisation{
-    constructor({ org_id, name, password_hash, is_account_active }){
+    constructor({ org_id, name, password_hash, is_account_active, email }){
         this.org_id = org_id
         this.name = name 
         this.password_hash = password_hash
         this.is_account_active = is_account_active
+        this.email = email
     }
 
 
@@ -23,8 +24,8 @@ class Organisation{
 
 
     static async createOrg(orgData){
-        const { name, password_hash, is_account_active } = orgData
-        const response = await db.query('INSERT INTO organisation(name, password_hash, is_account_active) VALUES($1, $2, $3) RETURNING *', [name, password_hash, is_account_active ])
+        const { name, password_hash, is_account_active, email } = orgData
+        const response = await db.query('INSERT INTO organisation(name, password_hash, is_account_active, email) VALUES($1, $2, $3, $4) RETURNING *', [name, password_hash, is_account_active, email])
         if(response.rows.length == 0){
             throw Error("Failed to create organisation")
         }
