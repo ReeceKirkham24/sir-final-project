@@ -49,6 +49,15 @@ class User {
     }
   }
 
+  static async checkUser(email, password) {
+    let response = await db.query(`SELECT COUNT(*) = 1 AS user_exists FROM "user"
+    WHERE email = $1 AND password_hash = $2;`,
+    [email, password])
+
+    const exists = response.rows[0].user_exists
+    return exists
+  }
+
   async update(data) {
     let response = await db.query(
       'UPDATE "user" SET email = COALESCE($2, email), org_id = COALESCE($3, org_id), department_id  = COALESCE($4, department_id), password_hash = COALESCE($5, password_hash)  WHERE name = $1 RETURNING *;',
