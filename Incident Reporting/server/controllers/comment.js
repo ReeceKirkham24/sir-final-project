@@ -9,6 +9,7 @@ async function index(req, res) {
     }
 }
 
+
 async function showId(req, res) {
     try {
         let id = parseInt(req.params.id)

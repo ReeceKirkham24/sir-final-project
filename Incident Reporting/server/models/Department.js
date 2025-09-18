@@ -1,5 +1,7 @@
 const db = require('../db/connect')
 
+const { response } = require('express')
+
 class Department{
     constructor({department_id, name, description, org_id }){
         this.department_id = department_id
@@ -21,7 +23,7 @@ class Department{
         const response = await db.query('SELECT * FROM department WHERE department_id = $1', [department_id])
         if(response.rows.length != 1){
             throw Error("Could not find department with this ID, or there a duplicates")
-        } return new Department(response)
+        } return new Department(response.rows[0])
     }
 
 
@@ -33,16 +35,16 @@ class Department{
     }
 
     async update(data){
-        const response = await db.query('UPDATE department SET name = $1 WHERE name = $2', [this.name, data.name])
+        console.log(data)
+        const response = await db.query('UPDATE department SET name = $1 WHERE department_id = $2 RETURNING *', [data.name, data.department_id])
         if(response.rows.length == 0){
-            throw new Error('Cannot find a department with this name')
+            throw new Error('Cannot find department with this ID')
         }return new Department(response.rows[0])
     }
 
 
     async delete(){
-        const response = await db.query('DELETE * FROM department WHERE department_id = $1', [this.department_id])
-        return new Department(response.rows[0])
+        const response = await db.query('DELETE FROM department WHERE department_id = $1', [this.department_id])
     }
 }
 

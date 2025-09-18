@@ -1,0 +1,22 @@
+# version: '3.9'
+# services:
+#   incident-reporting:
+#     image: reecekirkham24/sir-incident-reporting:0.0.1.RELEASE
+#     ports:
+#       - "3000:3000"
+#     depends_on:
+#       - sir-project-db
+#     restart: always
+#     networks:
+#       - sir-network
+
+#   sir-project-db:
+#     image: reecekirkham24/sir-project-db:0.0.1.RELEASE
+#     ports:
+#       - "5432:5432"
+#     restart: always
+#     networks:
+#       - sir-network
+      
+# networks:
+#   sir-network:
