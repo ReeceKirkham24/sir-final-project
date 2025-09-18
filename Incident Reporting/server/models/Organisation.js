@@ -12,8 +12,8 @@ class Organisation{
 
 
     static async getOrgById(org_id){
-        const id = org_id
-        const response = await db.query('SELECT * FROM Organisation WHERE org_id = $1', [org_id])
+        const response = await db.query('SELECT * FROM organisation WHERE org_id = $1', [org_id])
+        console.log(response.rows)
         if(response.rows.length != 1){
             throw Error("Cannot find a org with that id")
         }return new Organisation(response.rows[0])
@@ -24,7 +24,7 @@ class Organisation{
 
     static async createOrg(orgData){
         const { name, password_hash, is_account_active } = orgData
-        const response = await db.query('INSERT INTO Organisation(name, password_hash, is_account_active) VALUES($1, $2, $3) RETURNING *', [name, password_hash, is_account_active ])
+        const response = await db.query('INSERT INTO organisation(name, password_hash, is_account_active) VALUES($1, $2, $3) RETURNING *', [name, password_hash, is_account_active ])
         if(response.rows.length == 0){
             throw Error("Failed to create organisation")
         }
@@ -33,15 +33,14 @@ class Organisation{
 
 
     async changeOrgName(data){
-        const response = await db.query("UPDATE organisation SET name = $1 WHERE id = $2 RETURNING *", [data.name, this.org_id])
+        const response = await db.query("UPDATE organisation SET name = $1 WHERE org_id = $2 RETURNING *", [data.name, data.org_id])
         if(response.rows.length == 0){
             throw new Error("Could not find an organisation with that Id")
         } return new Organisation(response.rows[0])
     }
 
     async deleteOrganisation(){
-        const response = await db.query('DELETE * FROM organisation WHERE id = $1', [this.org_id])
-        return new Organisation(response.rows[0])
+        const response = await db.query('DELETE FROM organisation WHERE org_id = $1', [this.org_id])
     }
 
     
