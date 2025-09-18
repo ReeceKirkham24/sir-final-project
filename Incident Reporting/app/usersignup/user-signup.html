@@ -6,6 +6,7 @@
   <title>User Sign Up – S.I.R</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="userstyling.css" />
+  <script defer src="./user-signup.js"></script>
 </head>
 <body>
 
@@ -24,12 +25,12 @@
     <div class="signup-overlay"></div>
     <div class="signup-container">
       <h2>Create User Account</h2>
-      <form>
-        <input type="text" placeholder="Username" required />
-        <input type="email" placeholder="Email" required />
-        <input type="password" placeholder="Password" required />
-        <input type="password" placeholder="Confirm Password" required />
-        <input type="text" placeholder="Invite Link" required />
+      <form id = "signup-form">
+        <input type="text" id="name" placeholder="Full Name" required />
+        <input type="email" id="email" placeholder="Email" required />
+        <input type="password" id="password" placeholder="Password" required />
+        <input type="password" id="confirmpassword" placeholder="Confirm Password" required />
+        <input type="text" id="invite" placeholder="Invite Link" required />
         <button type="submit">Sign Up</button>
       </form>
       <p class="redirect">
