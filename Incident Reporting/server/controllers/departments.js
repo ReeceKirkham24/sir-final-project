@@ -14,7 +14,7 @@ async function index(req, res){
 async function show(req, res){
     try{
         const data = req.body
-        const response = await Department.getDepById(data.Department_Id)
+        const response = await Department.getDepById(data.department_id)
         res.status(200).json(response)
 
     }catch(err){
@@ -39,8 +39,8 @@ async function createDep(req, res){
 async function updateDep(req, res){
     try{
         const data = req.body
-        const response = await Department.getDepById(data.Department_Id)
-        const result = await response.update(data.Name)
+        const response = await Department.getDepById(data.department_id)
+        const result = await response.update(data)
         res.status(200).json(result)
     }catch(err){
         res.status(400).json({err: err.message})
@@ -50,10 +50,9 @@ async function updateDep(req, res){
 async function destroyDep(req, res){
      try{
         const data = req.body
-        const response = await Department.getDepById(data.Department_Id)
-        const result = response.end()
-        res.status(204).end()
-        
+        const response = await Department.getDepById(data.department_id)
+        const result = response.delete()
+        res.status(204).end()        
     }catch(err){
         res.status(400).json({ err: err.message })
     }
