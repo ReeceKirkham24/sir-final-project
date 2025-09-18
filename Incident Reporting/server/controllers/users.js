@@ -32,9 +32,9 @@ async function create(req, res) {
 
 async function update (req, res) {
     try {
-        const name = req.params.name;
+        // const name = req.params.name;
         const data = req.body;
-        const user = await User.getOneByUserName(name);
+        const user = await User.getOneByUserName(data.name);
         const result = await user.update(data);
         res.status(200).json(result);
     } catch (err) {

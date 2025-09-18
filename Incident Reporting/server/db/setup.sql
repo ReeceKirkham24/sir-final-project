@@ -1,81 +1,79 @@
-DROP TABLE IF EXISTS Comments;
-DROP TABLE IF EXISTS Tickets;
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS tickets;
 DROP TABLE IF EXISTS "user";
-DROP TABLE IF EXISTS Department;
-DROP TABLE IF EXISTS Organisation;
+DROP TABLE IF EXISTS department;
+DROP TABLE IF EXISTS organisation;
 
-CREATE TABLE Organisation (
-    Org_Id INT GENERATED ALWAYS AS IDENTITY,
-    Name VARCHAR(100) NOT NULL,
-    Password_Hash VARCHAR(255) NOT NULL,
-    Is_Account_Active BOOLEAN DEFAULT TRUE,
-    PRIMARY KEY (Org_Id)
+CREATE TABLE organisation (
+    org_id INT GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(100) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    is_account_active BOOLEAN DEFAULT TRUE,
+    PRIMARY KEY (org_id)
 );
 
-CREATE TABLE Department (
-    Department_Id INT GENERATED ALWAYS AS IDENTITY,
-    Name VARCHAR(100) NOT NULL,
-    Description TEXT,
-    Org_Id INT NOT NULL,
-    PRIMARY KEY (Department_Id),
-    FOREIGN KEY (Org_Id) REFERENCES Organisation(Org_Id)
+CREATE TABLE department (
+    department_id INT GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    PRIMARY KEY (department_id)
 );
 
 CREATE TABLE "user" (
-    User_Id INT GENERATED ALWAYS AS IDENTITY,
-    Name VARCHAR(255) NOT NULL, --maybe first name and last name
-    Email VARCHAR(255) UNIQUE NOT NULL,
-    Org_Id INT NOT NULL,
-    Department_Id INT, --maybe user might not have a department
-    Password_Hash VARCHAR(255) NOT NULL,
-    PRIMARY KEY (User_Id),
-    FOREIGN KEY (Org_Id) REFERENCES Organisation(Org_Id),
-    FOREIGN KEY (Department_Id) REFERENCES Department(Department_Id)
+    user_id INT GENERATED ALWAYS AS IDENTITY,
+    name VARCHAR(255) NOT NULL, --maybe first name and last name
+    email VARCHAR(255) UNIQUE NOT NULL,
+    org_id INT NOT NULL,
+    department_id INT, --maybe user might not have a department
+    password_hash VARCHAR(255) NOT NULL,
+    PRIMARY KEY (user_id),
+    FOREIGN KEY (org_id) REFERENCES organisation(org_id),
+    FOREIGN KEY (department_id) REFERENCES department(department_id)
 );
 
-CREATE TABLE Tickets (
-    Ticket_Id INT GENERATED ALWAYS AS IDENTITY,
-    Status VARCHAR(50) NOT NULL,
-    Text TEXT NOT NULL,
-    Severity VARCHAR(50),
-    Category VARCHAR(50),
-    User_Id INT NOT NULL,
-    Date_Created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    Date_Completed TIMESTAMP,
-    PRIMARY KEY (Ticket_Id),
-    FOREIGN KEY (User_Id) REFERENCES "user"(User_Id)
+CREATE TABLE tickets (
+    ticket_id INT GENERATED ALWAYS AS IDENTITY,
+    status VARCHAR(50) NOT NULL,
+    text TEXT NOT NULL,
+    severity VARCHAR(50),
+    category VARCHAR(50),
+    user_id INT NOT NULL,
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_completed TIMESTAMP,
+    PRIMARY KEY (ticket_id),
+    FOREIGN KEY (user_id) REFERENCES "user"(user_id)
 );
 
-CREATE TABLE Comments (
-    Comment_Id INT GENERATED ALWAYS AS IDENTITY,
-    Ticket_Id INT NOT NULL,
-    User_Id INT NOT NULL,
-    Body TEXT NOT NULL,
-    PRIMARY KEY (Comment_Id),
-    FOREIGN KEY (Ticket_Id) REFERENCES Tickets(Ticket_Id),
-    FOREIGN KEY (User_Id) REFERENCES "user"(User_Id)
+CREATE TABLE comments (
+    comment_id INT GENERATED ALWAYS AS IDENTITY,
+    ticket_id INT NOT NULL,
+    user_id INT NOT NULL,
+    body TEXT NOT NULL,
+    PRIMARY KEY (comment_id),
+    FOREIGN KEY (ticket_id) REFERENCES tickets(ticket_id),
+    FOREIGN KEY (user_id) REFERENCES "user"(user_id)
 );
 
 
 --Seed Data
 
--- Organisations
-INSERT INTO Organisation (Name, Password_Hash, Is_Account_Active)
+-- organisations
+INSERT INTO organisation (name, password_hash, is_account_active)
 VALUES 
 ('Tech Corp', 'hash_org1', TRUE),
 ('Health Systems', 'hash_org2', TRUE),
 ('EduWorld', 'hash_org3', FALSE);
 
 -- Departments
-INSERT INTO Department (Name, Description, Org_Id)
+INSERT INTO department (name, description, org_id)
 VALUES
 ('IT Support', 'Handles technical issues', 1),
 ('HR', 'Manages employee relations', 1),
 ('Finance', 'Manages budgets and payroll', 3),
 ('Academic Services', 'Supports students and faculty', 2);
 
--- Users
-INSERT INTO "user" (Name, Email, Org_Id, Department_Id, Password_Hash)
+-- users
+INSERT INTO "user" (name, email, org_id, department_id, password_hash)
 VALUES
 ('Alice Johnson', 'alice@techcorp.com', 1, 1, 'pw_hash1'),
 ('Bob Smith', 'bob@techcorp.com', 1, 2, 'pw_hash2'),
@@ -84,19 +82,19 @@ VALUES
 ('Ethan Liu', 'ethan@healthsys.com', 2, 3, 'pw_hash5'),
 ('Fiona Garcia', 'fiona@eduworld.com', 3, 4, 'pw_hash6');
 
--- Tickets
-INSERT INTO Tickets (Status, Text, Severity, Category, User_Id, Date_Completed)
+-- tickets
+INSERT INTO tickets (status, text, severity, category, user_id, date_completed)
 VALUES
 ('Open', 'Laptop not starting', 'High', 'Hardware', 1, NULL),
 ('In Progress', 'VPN connection failing intermittently', 'Medium', 'Networking', 1, NULL),
 ('Closed', 'Payroll discrepancy for August', 'High', 'Finance', 2, CURRENT_TIMESTAMP),
-('Open', 'Email not syncing on mobile device', 'Low', 'Software', 3, NULL),
+('Open', 'email not syncing on mobile device', 'Low', 'Software', 3, NULL),
 ('In Progress', 'System outage in radiology dept.', 'Critical', 'Infrastructure', 4, NULL),
 ('Closed', 'Budget report formatting issue', 'Low', 'Finance', 5, CURRENT_TIMESTAMP),
 ('Open', 'Unable to access course portal', 'Medium', 'Academic Services', 6, NULL);
 
 -- Comments
-INSERT INTO Comments (Ticket_Id, User_Id, Body)
+INSERT INTO comments (ticket_id, user_id, body)
 VALUES
 (1, 1, 'Tried restarting but still not working.'),
 (1, 2, 'Please bring the laptop to IT support desk.'),

@@ -13,16 +13,17 @@ class User {
   }
 
   static async getAll() {
-    const response = await db.query('SELECT * FROM user;');
+    const response = await db.query('SELECT * FROM "user";');
     if (response.rows.length === 0) {
       throw Error("No users available");
     }
+    console.log(response.rows);
     return response.rows.map((user) => new User(user));
   }
 
   static async getOneByUserName(userName) {
     const response = await db.query(
-      'SELECT * FROM user WHERE LOWER(name) = LOWER($1);',
+      'SELECT * FROM "user" WHERE LOWER(name) = LOWER($1);',
       [userName]
     );
     if (response.rows.length !== 1) {
@@ -34,12 +35,12 @@ class User {
   static async create(data) {
     const { name, email, org_id, department_id, password_hash } = data;
     const existingUser = await db.query(
-      'SELECT name FROM user WHERE LOWER(name) = LOWER($1);',
+      'SELECT name FROM "user" WHERE LOWER(name) = LOWER($1);',
       [name]
     );
     if (existingUser.rows.length === 0) {
       let response = await db.query(
-        'INSERT INTO user (name, email, org_id, department_id, password_hash) VALUES ($1, $2, $3, $4, $5) RETURNING *;',
+        'INSERT INTO "user" (name, email, org_id, department_id, password_hash) VALUES ($1, $2, $3, $4, $5) RETURNING *;',
         [name, email, org_id, department_id, password_hash]
       );
       return new User(response.rows[0]);
@@ -50,15 +51,16 @@ class User {
 
   async update(data) {
     let response = await db.query(
-      'UPDATE user SET email = COALESCE($2, email), org_id = COALESCE($3, org_id), department_id  = COALESCE($4, department_id), password_hash = COALESCE($5, password_hash)  WHERE name = $1 RETURNING *;',
+      'UPDATE "user" SET email = COALESCE($2, email), org_id = COALESCE($3, org_id), department_id  = COALESCE($4, department_id), password_hash = COALESCE($5, password_hash)  WHERE name = $1 RETURNING *;',
       [
-        this.name,
+        data.name,
         data.email,
         data.org_id,
         data.department_id,
         data.password_hash
       ]
     );
+    console.log(response.rows);
     if (response.rows.length != 1) {
       throw new Error("Unable to update entries");
     }
