@@ -29,23 +29,31 @@ class Ticket {
     }
 
     static async create(data) {
-        const { status, text, severity, category, user_id } = data;
-        const existingUser = await db.query("SELECT user_id FROM user WHERE user_id = $1;", [user_id]);
+        const { status, text, severity, category, user_id, date_created, date_completed} = data;
+        const existingUser = await db.query("SELECT user_id FROM \"user\" WHERE user_id = $1;", [user_id]);
         if (existingUser.rows.length === 0) {
             throw Error("A user with this ID does not exist");
         }
         const response = await db.query(
-            'INSERT INTO tickets (status, text, severity, category, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *;',
-            [status, text, severity, category, user_id]
+            'INSERT INTO tickets (status, text, severity, category, user_id, date_created, date_completed) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;',
+            [status, text, severity, category, user_id, date_created, date_completed]
         );
         return new Ticket(response.rows[0]);
     }
 
     async update(data) {
-        const { status, text, severity, category, user_id } = data;
+        const { status=this.status, text=this.text, severity=this.severity, category=this.category, user_id=this.user_id, date_created=this.date_created} = data;
+        let date_completed=null
+
+        if(status.toLowerCase()=="closed"){
+            date_completed = new Date().toISOString();
+            console.log(date_completed);
+        }
+        
+        console.log({ status, text, severity, category, user_id, date_created, date_completed });
         const response = await db.query(
-            'UPDATE tickets SET status = $1, text = $2, severity = $3, category = $4, user_id = $5 WHERE ticket_id = $6 RETURNING *;',
-            [status, text, severity, category, user_id, this.ticket_id]
+            'UPDATE tickets SET status = $1, text = $2, severity = $3, category = $4, user_id = $5, date_created = $6, date_completed = $7 WHERE ticket_id = $8 RETURNING *;',
+            [status, text, severity, category, user_id, date_created, date_completed, this.ticket_id]
         );
         if (response.rows.length !== 1) {
             throw Error("Unable to update ticket");
