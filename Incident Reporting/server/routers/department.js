@@ -5,9 +5,9 @@ const departmentController = require('../controllers/departments')
 const departmentRouter = Router()
 
 departmentRouter.get('/', departmentController.index)
-departmentRouter.get('/:id', departmentController.show)
-departmentRouter.post('/', departmentController.createDep)
-departmentRouter.patch('/:id', departmentController.updateDep)
-departmentRouter.delete('/:id', departmentController.destroyDep)
+departmentRouter.get('/show', departmentController.show)
+departmentRouter.post('/create', departmentController.createDep)
+departmentRouter.patch('/update', departmentController.updateDep)
+departmentRouter.delete('/destroy', departmentController.destroyDep)
 
 module.exports = departmentRouter
