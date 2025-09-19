@@ -7,9 +7,19 @@ async function showOrg(req, res){
         const data = req.body
         const response = await Organisation.getOrgById(data.org_id)
         res.status(200).json(response)
-
+        
     }catch(err){
         res.status(404).json({err: err.message})
+    }
+}
+
+async function loginOrg(req, res){
+    try{
+        const data = req.body
+        const response = await Organisation.login(data)
+        res.status(200).json(response)
+    }catch(err){
+        res.status(404).json({error: err.message})
     }
 }
 
@@ -52,4 +62,6 @@ async function destroyOrg(req, res){
     }
 }
 
-module.exports = { createOrg, updateOrg, destroyOrg, showOrg }
+
+
+module.exports = { createOrg, updateOrg, destroyOrg, showOrg, loginOrg }

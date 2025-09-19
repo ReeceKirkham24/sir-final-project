@@ -1,4 +1,5 @@
-const db = require('../db/connect')
+const db = require('../db/connect');
+const bcrypt = require("bcryptjs");
 
 
 class Organisation{
@@ -13,11 +14,22 @@ class Organisation{
 
     static async getOrgById(org_id){
         const response = await db.query('SELECT * FROM organisation WHERE org_id = $1', [org_id])
-        console.log(response.rows)
         if(response.rows.length != 1){
             throw Error("Cannot find a org with that id")
         }return new Organisation(response.rows[0])
 
+    }
+
+
+    static async login(data){
+        const response = await db.query('SELECT * FROM organisation WHERE email = $1', [data.email])
+        if(response.rows.length != 1){
+            throw Error("There is no organisation registered with this email")
+        }
+        const userPassInput = data.password
+        if(await bcrypt.compare(userPassInput, response.rows[0].password_hash) == true){
+            return new Organisation(response.rows[0])   
+        } throw new Error("Incorrect sign in credentials")
     }
 
 
