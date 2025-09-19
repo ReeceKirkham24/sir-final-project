@@ -1,7 +1,7 @@
 window.onload = async function() {
 	let ticketResources = [];
 	try {
-		const response = await fetch('http://localhost:5001/ticket');
+		const response = await fetch('http://localhost:5000/ticket');
 		if (!response.ok) throw new Error('Network response was not ok');
 		ticketResources = await response.json();
 		console.log('Fetched tickets:', ticketResources);

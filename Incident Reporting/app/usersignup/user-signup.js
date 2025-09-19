@@ -19,7 +19,7 @@ document.getElementById("signup-form").addEventListener("submit", async (e) => {
         })
     }
     console.log(options);
-    const response = await fetch("http://localhost:5001/user/create", options)
+    const response = await fetch("http://localhost:5000/user/create", options)
     const data = await response.json();
 
     if (response.status == 201) {
