@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcryptjs");
 
 
 async function index(req, res) {
@@ -34,6 +34,29 @@ async function create(req, res) {
   }
 }
 
+async function login(req, res) {
+  try {
+  const email = req.body.email
+  const password = req.body.password
+
+  
+  const response = await User.checkUser(email, password)
+  
+  let message
+  if (response === true){
+    message = "Correct Details: User has been granted access"
+  }
+  if (response === false){
+    message = "Incorrect Details: Access Denied"
+  }
+
+  res.status(200).json(message);
+  } catch (error) {
+    res.status(404).json({error: error.message})
+  }
+}
+
+
 async function update (req, res) {
     try {
         // const name = req.params.name;
@@ -58,9 +81,10 @@ async function destroy (req, res) {
 }
 
 module.exports = {
-  index,
-  show,
-  create,
-  update,
-  destroy
+    index,
+    show,
+    login,
+    create,
+    update,
+    destroy
 }

@@ -1,5 +1,7 @@
 const db = require("../db/connect") 
 
+const bcrypt = require("bcryptjs");
+
 class User {
   constructor({ user_id, name, email, org_id, department_id, password_hash }) {
     this.user_id = user_id;
@@ -45,6 +47,22 @@ class User {
     } else {
       throw Error("A user with this name already exists");
     }
+  }
+
+  static async checkUser(email, password) {
+
+    let response1 = await db.query(
+    `SELECT password_hash 
+     FROM "user"
+     WHERE email = $1;`,
+    [email]
+  )
+
+    const storedHash = response1.rows[0].password_hash
+    const match = await bcrypt.compare(password, storedHash)
+
+    return match
+
   }
 
   async update(data) {
