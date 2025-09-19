@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const bcrypt = require('bcrypt');
 
 
 async function index(req, res) {
@@ -24,6 +25,8 @@ async function show(req, res) {
 async function create(req, res) {
   try {
     const data = req.body;
+    const salt = await bcrypt.genSalt(parseInt(process.env.BCRYPT_SALT_ROUNDS));
+    data["password_hash"] = await bcrypt.hash(data.password_hash, salt);
     const newUser = await User.create(data);
     res.status(201).json(newUser);
   } catch (err) {
@@ -55,9 +58,9 @@ async function destroy (req, res) {
 }
 
 module.exports = {
-    index,
-    show,
-    create,
-    update,
-    destroy
+  index,
+  show,
+  create,
+  update,
+  destroy
 }

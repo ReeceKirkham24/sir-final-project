@@ -74,4 +74,17 @@ class User {
   }
 }
 
+async function register(req, res) {
+    try {
+        const data = req.body;
+        const salt = await bcrypt.genSalt(parseInt(process.env.BCRYPT_SALT_ROUNDS));
+        data["passwordhash"] = await bcrypt.hash(data.passwordhash, salt);
+        const result = await UserInfo.create(data);
+        res.status(201).send(result);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
+
 module.exports = User;
