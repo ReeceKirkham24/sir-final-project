@@ -7,6 +7,7 @@
   <script defer src="./user-login.js"></script>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <script defer src="main.js"></script>
 </head>
 <body>
 
@@ -39,9 +40,9 @@
       <div class="login-container">
         <div class="login-form panel org-panel">
           <h2>Organisation Login</h2>
-          <form>
-            <input type="email" placeholder="Organisation Email" required />
-            <input type="password" placeholder="Password" required />
+          <form id="orgform">
+            <input id="orgemail" type="email" placeholder="Organisation Email" required />
+            <input id="orgpassword"type="password" placeholder="Password" required />
             <button type="submit">Login</button>
           </form>
           <a href="../organisationsignup/org-signup.html">Create Organisation Account</a>
@@ -74,9 +75,9 @@
         </div>
         <div class="login-form panel user-panel">
           <h2>User Login</h2>
-          <form>
-            <input id="emailInput" type="email" placeholder="User Email" required />
-            <input id="passwordInput" type="password" placeholder="Password" required />
+          <form id="userform">
+            <input id="useremail" type="email" placeholder="User Email" required />
+            <input id="userpassword" type="password" placeholder="Password" required />
             <button type="submit">Login</button>
           </form>
           <a href="../usersignup/user-signup.html" class="panel-link">Create User Account</a>
