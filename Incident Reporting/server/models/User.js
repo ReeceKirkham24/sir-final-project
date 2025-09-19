@@ -57,8 +57,8 @@ class User {
      WHERE email = $1;`,
     [email]
   )
-
     const storedHash = response1.rows[0].password_hash
+    console.log(storedHash)
     const match = await bcrypt.compare(password, storedHash)
 
     return match
