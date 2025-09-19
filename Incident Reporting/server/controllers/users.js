@@ -1,5 +1,6 @@
-const { response } = require("../app");
 const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+
 
 async function index(req, res) {
   try {
@@ -33,9 +34,10 @@ async function create(req, res) {
 
 async function login(req, res) {
   try {
-
   const email = req.body.email
-  const password = req.body.password_hash
+  const password = req.body.password
+
+  
   const response = await User.checkUser(email, password)
   
   let message
@@ -48,7 +50,7 @@ async function login(req, res) {
 
   res.status(200).json(message);
   } catch (error) {
-    res.status(404).json({error: err.message})
+    res.status(404).json({error: error.message})
   }
 }
 

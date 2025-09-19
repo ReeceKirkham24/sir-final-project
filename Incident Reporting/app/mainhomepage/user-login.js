@@ -1,14 +1,5 @@
+
 const loginForm = document.querySelector("#user-login form");
-
-// loginForm.addEventListener("submit", extractInfo);
-
-// function extractInfo(e) {
-//     e.preventDefault();
-//     console.log(e.target.emailInput.value);
-//     console.log(e.target.passwordInput.value);
-//     e.target.emailInput.value = "";
-//     e.target.passwordInput.value = "";
-// }
 
 loginForm.addEventListener("submit", submitForm)
 
@@ -28,7 +19,8 @@ async function submitForm(e) {
         body: JSON.stringify(data)
     }
 
-    await fetch(`http://localhost:5001/user/login`, options)
-
+    const response = await fetch(`http://localhost:5001/user/login`, options)
+    const message = await response.json()
+    console.log(message)
 
 }
