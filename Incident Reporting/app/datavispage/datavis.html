@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Analytics – S.I.R</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="datastyling.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <ul>
+      <li><a href="../mainhomepage/index.html#hero">Home</a></li>
+      <li><a href="../mainhomepage/index.html#org-login">Organisation Sign In</a></li>
+      <li><a href="../mainhomepage/index.html#user-login">User Sign In</a></li>
+      <li><a href="../mainhomepage/index.html#about">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- TAB BAR -->
+  <div class="tabs">
+    <a href="../admincontentpage/admincontent.html" class="back-btn">← Back to Tickets</a>
+    <button class="tab active" data-tab="analyse">Analyse</button>
+    <button class="tab" data-tab="predict">Predictive Insight</button>
+  </div>
+
+  <!-- CONTENT SECTIONS -->
+  <section id="analyse" class="content-section active">
+    <div class="overlay"></div>
+    <div class="analyse-container">
+      <div class="analyse-controls">
+        <h2>Select Data to Analyse</h2>
+        <label for="dataset">Choose Dataset:</label>
+        <select id="dataset">
+          <option value="departments">Tickets by Department</option>
+          <option value="severity">Tickets by Severity</option>
+          <option value="status">Tickets by Status</option>
+        </select>
+      </div>
+      <div class="analyse-chart">
+        <h2>Chart</h2>
+        <div class="chart-placeholder">Pie Chart will be displayed here</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="predict" class="content-section">
+    <div class="overlay"></div>
+    <div class="predict-container">
+      <h2>Predictive Insights</h2>
+      <p>Using AI to predict future department issues and severity levels.</p>
+      <div class="prediction-box">
+        Future insights will appear here once connected to the backend AI system.
+      </div>
+    </div>
+  </section>
+
+  <!-- Script -->
+  <script>
+    // Tab switching
+    const tabs = document.querySelectorAll(".tab");
+    const sections = document.querySelectorAll(".content-section");
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        sections.forEach(s => s.classList.remove("active"));
+
+        tab.classList.add("active");
+        const target = document.getElementById(tab.dataset.tab);
+        target.classList.add("active");
+      });
+    });
+  </script>
+
+</body>
+</html>
