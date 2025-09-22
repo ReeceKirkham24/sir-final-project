@@ -1,5 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken')
+
 
 
 async function index(req, res) {
@@ -41,20 +43,28 @@ async function login(req, res) {
 
   
   const response = await User.checkUser(email, password)
-  
+  console.log(response)
   let message
-  if (response === true){
-    message = "Correct Details: User has been granted access"
+  const tokenobj = {
+    token: 'x'
   }
-  if (response === false){
+  if (response.match === true){
+    message = "Correct Details: User has been granted access"
+    const userToken = jwt.sign({id: response.id}, 'test-secret', {
+      expiresIn: "1h"
+    })
+    tokenobj.token = userToken
+  }
+  if (response.match === false){
     message = "Incorrect Details: Access Denied"
   }
-
-  res.status(200).json(message);
+  res.status(200).json(tokenobj);
   } catch (error) {
     res.status(404).json({error: error.message})
   }
 }
+
+
 
 
 async function update (req, res) {

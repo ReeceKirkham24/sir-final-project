@@ -54,6 +54,7 @@ async function submitForm(e) {
 
     const response = await fetch(`http://localhost:5000/user/login`, options)
     const message = await response.json()
+    localStorage.setItem("token", message.token)
     console.log(message)
     // we need to make the response of a req at this endpoint hold a jwt or any other form of auth
 
