@@ -1,5 +1,5 @@
-// Add event listener to the submit button for the ticket submission form
 document.addEventListener('DOMContentLoaded', async function() {
+    //stuff to submit ticket and auto severity
 	const form = document.getElementById('ticketForm')
     const resultBox = document.getElementById('ticketResult')
     let severity = null
@@ -61,4 +61,48 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 	}
 
+    const options = {
+        method: "GET",
+        headers:{
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    }
+
+    const ticketResponse = await fetch("http://localhost:5000/ticket", options)
+    const ticketsData = await ticketResponse.json();
+
+    console.log(ticketsData);
+
+    const ticketList = document.getElementById('ticketList');
+    ticketList.innerHTML = "";
+
+    ticketsData.forEach(ticket => {
+        const ticketDiv = document.createElement('div');
+        ticketDiv.className = 'ticket-item';
+        ticketDiv.id = ticket.id;
+        ticketDiv.setAttribute('data-content', ticket.text || '');
+        ticketDiv.setAttribute('data-severity', ticket.severity || '');
+        ticketDiv.innerText = ticket.text || 'No description';
+        ticketDiv.addEventListener('click', function() {
+            const detailDiv = document.querySelector('.ticket-detail');
+            let completed
+            if(!ticket.date_completed){
+                completed = "Still in progress"
+            }
+            else{
+                completed=new Date(ticket.date_completed).toLocaleString()
+            }
+            detailDiv.innerHTML = `
+                <h3>Ticket Details</h3>
+                <p><strong>Description:</strong> ${ticket.text}</p>
+                <p><strong>Severity:</strong> ${ticket.severity}</p>
+                <p><strong>Status:</strong> ${ticket.status}</p>
+                <p><strong>Category:</strong> ${ticket.category || 'N/A'}</p>
+                <p><strong>Date Created:</strong> ${new Date(ticket.date_created).toLocaleString()}</p>
+                <p><strong>Date Completed:</strong> ${completed}</p>
+            `;
+        });
+        ticketList.appendChild(ticketDiv);
+    });
 });
