@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll --verbose --detectOpenHandles --runInBand",
+    "test-coverage": "npx jest --coverage",
     "dev": "nodemon -L \"Incident Reporting/server/index.js\"",
     "start": "node \"Incident Reporting/server/index.js\"",
     "setup-db": "node \"Incident Reporting/server/db/setup.js\""
