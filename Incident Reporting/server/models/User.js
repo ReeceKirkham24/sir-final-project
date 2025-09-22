@@ -52,16 +52,20 @@ class User {
   static async checkUser(email, password) {
 
     let response1 = await db.query(
-    `SELECT password_hash 
+    `SELECT * 
      FROM "user"
      WHERE email = $1;`,
     [email]
   )
     const storedHash = response1.rows[0].password_hash
+    const user_id = response1.rows[0].user_id
     console.log(storedHash)
     const match = await bcrypt.compare(password, storedHash)
 
-    return match
+    return {
+      match: match,
+      id: user_id
+    }
 
   }
 
