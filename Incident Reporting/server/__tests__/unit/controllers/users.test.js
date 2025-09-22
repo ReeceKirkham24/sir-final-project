@@ -53,26 +53,26 @@ describe("User Controller", () => {
         let testUser, mockReq;
 
         beforeEach(() => {
-            testUser = { name: "Test Name" };
-            mockReq = { params: { name: "Test Name" }};
+            testUser = { user_id: 123 };
+            mockReq = { params: { user_id: 123 }};
         })
 
-        it("should return a list of users with the same name and a status code of 200", async () => {
-           jest.spyOn(User, "getOneByUserName").mockResolvedValue(testUser);
+        it("should return a user with the matching user_id and a status code of 200", async () => {
+           jest.spyOn(User, "getOneByUserId").mockResolvedValue(testUser);
            
            await usersController.show(mockReq, mockRes);
 
-           expect(User.getOneByUserName).toHaveBeenCalled();
+           expect(User.getOneByUserId).toHaveBeenCalled();
            expect(mockStatus).toHaveBeenCalledWith(200);
            expect(mockJson).toHaveBeenCalledWith(testUser);
         })
 
-        it("should return an Error of 404 if no users are found with that name", async () => {
-            jest.spyOn(User, "getOneByUserName").mockRejectedValue(new Error("No"));
+        it("should return an Error of 404 if no users are found with that user_id", async () => {
+            jest.spyOn(User, "getOneByUserId").mockRejectedValue(new Error("No"));
 
             await usersController.show(mockReq, mockRes);
 
-            expect(User.getOneByUserName).toHaveBeenCalled();
+            expect(User.getOneByUserId).toHaveBeenCalled();
             expect(mockStatus).toHaveBeenCalledWith(404);
             expect(mockJson).toHaveBeenCalledWith({ error: "No"});
         })
@@ -119,22 +119,22 @@ describe("update", () => {
     });
 
     it("should update a user and return status 200", async () => {
-        jest.spyOn(User, "getOneByUserName").mockResolvedValue({ update: mockUpdate });
+        jest.spyOn(User, "getOneByUserId").mockResolvedValue({ update: mockUpdate });
 
         await usersController.update(mockReq, mockRes);
 
-        expect(User.getOneByUserName).toHaveBeenCalledWith(updatedUser.name);
+        expect(User.getOneByUserId).toHaveBeenCalledWith(updatedUser.name);
         expect(mockUpdate).toHaveBeenCalledWith(updatedUser);
         expect(mockStatus).toHaveBeenCalledWith(200);
         expect(mockJson).toHaveBeenCalledWith(updatedUser);
     });
 
     it("should return an error of 404 if update fails", async () => {
-        jest.spyOn(User, "getOneByUserName").mockRejectedValue(new Error("User not found"));
+        jest.spyOn(User, "getOneByUserId").mockRejectedValue(new Error("User not found"));
 
         await usersController.update(mockReq, mockRes);
 
-        expect(User.getOneByUserName).toHaveBeenCalledWith(updatedUser.name);
+        expect(User.getOneByUserId).toHaveBeenCalledWith(updatedUser.name);
         expect(mockStatus).toHaveBeenCalledWith(404);
         expect(mockJson).toHaveBeenCalledWith({ error: "User not found" });
     });
@@ -151,26 +151,25 @@ describe("destroy", () => {
     });
 
     it("should delete a user and return status 204", async () => {
-        jest.spyOn(User, "getOneByUserName").mockResolvedValue({ destroy: mockDestroy });
+        jest.spyOn(User, "getOneByUserId").mockResolvedValue({ destroy: mockDestroy });
 
         await usersController.destroy(mockReq, mockRes);
 
-        expect(User.getOneByUserName).toHaveBeenCalledWith(testUser.name);
+        expect(User.getOneByUserId).toHaveBeenCalledWith(testUser.name);
         expect(mockDestroy).toHaveBeenCalled();
         expect(mockStatus).toHaveBeenCalledWith(204);
         expect(mockEnd).toHaveBeenCalled();
     });
 
     it("should return an error of 404 if destroy fails", async () => {
-        jest.spyOn(User, "getOneByUserName").mockRejectedValue(new Error("User not found"));
+        jest.spyOn(User, "getOneByUserId").mockRejectedValue(new Error("User not found"));
 
         await usersController.destroy(mockReq, mockRes);
 
-        expect(User.getOneByUserName).toHaveBeenCalledWith(testUser.name);
+        expect(User.getOneByUserId).toHaveBeenCalledWith(testUser.name);
         expect(mockStatus).toHaveBeenCalledWith(404);
         expect(mockJson).toHaveBeenCalledWith({ error: "User not found" });
     });
 });
-
 
 })

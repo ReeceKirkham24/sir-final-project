@@ -12,7 +12,7 @@ async function index(req, res) {
 
 async function show(req, res) {
     try {
-        const data = req.body
+        const data = req.params
         const user = await User.getOneByUserId(data.user_id);
         res.status(200).json(user);
     }
@@ -33,7 +33,6 @@ async function create(req, res) {
 
 async function update (req, res) {
     try {
-        // const name = req.params.name;
         const data = req.body;
         const user = await User.getOneByUserId(data.user_id);
         const result = await user.update(data);
