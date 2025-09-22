@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.log(resultBox)
             console.log(ticketBody)
 
+            // section which calls api, if testing ticket creating, please disable this as we onlu have 100 calls per month
+
             await fetch('https://www.nyckel.com/v1/functions/support-request-urgency/invoke', {
                 method: 'POST',
                 headers: {
@@ -28,6 +30,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                 resultBox.innerHTML = `<p><strong>Ticket submitted!</strong> Severity: ${severity}</p>`;
             });
 
+            // end of section, if commenting above out, uncomment this below
+
+            //severity = "Medium";
+            //resultBox.innerHTML = `<p><strong>Ticket submitted!</strong> Severity: ${severity}</p>`;
+            
             const options = {
                 method: "POST",
                 headers:{
