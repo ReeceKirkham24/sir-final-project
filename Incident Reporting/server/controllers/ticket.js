@@ -2,6 +2,7 @@ const Ticket = require('../models/Tickets')
 
 async function index(req, res) {
     try {
+        const data = req.body
         const tickets = await Ticket.getAll()
         res.status(200).json(tickets)
     } catch (err) {
@@ -22,7 +23,9 @@ async function showId(req, res) {
 async function create(req, res) {
     try {
         const data = req.body
-        const newTicket = await Ticket.create(data)
+        const id = req.user_id
+        const newTicket = await Ticket.create(data, id)
+        // create a ticket parsing the ticket's details into data, and the user creating ticket into id
         res.status(201).json(newTicket)
     } catch (err) {
         res.status(400).json({error: err.message})

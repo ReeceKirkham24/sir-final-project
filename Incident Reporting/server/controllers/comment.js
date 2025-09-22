@@ -23,7 +23,8 @@ async function showId(req, res) {
 async function create(req, res) {
     try {
         const data = req.body
-        const newComment = await Comment.create(data)
+        const id = req.user_id
+        const newComment = await Comment.create(data, id)
         res.status(201).json(newComment)
     } catch (err) {
         res.status(400).json({error: err.message})

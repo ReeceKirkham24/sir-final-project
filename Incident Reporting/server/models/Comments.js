@@ -24,8 +24,8 @@ class Comment{
         return new Comment(response.rows[0])
     }
 
-    static async create(data){
-        const {ticket_id, user_id, body} = data
+    static async create(data, user_id){
+        const {ticket_id, body} = data
 
         const existingUser = await db.query("SELECT user_id FROM \"user\" WHERE user_id = $1;", [user_id])
         if (existingUser.rows.length === 0) {
@@ -42,6 +42,7 @@ class Comment{
     }
 
     async update(data){
+        // ! THIS IS PROB GONNA BREAK - DID NOT CHANGE TO WORK WITH AUTHENTICATOR > DATA BEING PARSED INTO THIS IS PROB INCORRECT
         const {ticket_id=this.ticket_id, user_id=this.user_id, body=this.body} = data
         const response = await db.query("UPDATE comments SET ticket_id = $1, user_id = $2, body = $3 WHERE comment_id = $4 RETURNING *;", [ticket_id, user_id, body, this.comment_id])
         console.log(response);
