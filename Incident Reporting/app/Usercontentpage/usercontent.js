@@ -36,13 +36,15 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             severity = "Medium";
             resultBox.innerHTML = `<p><strong>Ticket submitted!</strong> Severity: ${severity}</p>`;
+
+            // end of 2nd section
             
             const options = {
                 method: "POST",
                 headers:{
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    authorisation: localStorage.getItem("token")
+                    'authorisation': localStorage.getItem("token")
                 },
                 body: JSON.stringify({
                     status: "Open",
@@ -65,7 +67,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         method: "GET",
         headers:{
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'authorisation': localStorage.getItem("token")
         }
     }
 

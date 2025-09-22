@@ -12,12 +12,21 @@ class Ticket {
         this.date_completed = date_completed;
     }
 
-    static async getAll() {
-        const response = await db.query("SELECT * FROM tickets;");
+    static async getAll(org_id) {
+        const response = await db.query(`
+            SELECT t.*, u.name AS user_name, o.name AS organisation_name FROM tickets t 
+            JOIN "user" u ON t.user_id = u.user_id 
+            JOIN organisation o ON u.org_id = o.org_id
+            WHERE o.org_id = $1;`, [org_id]);
         if (response.rows.length === 0) {
             throw Error("No tickets available");
         }
-        return response.rows.map(ticket => new Ticket(ticket));
+        return response.rows.map(ticket => {
+            const ticketInstance = new Ticket(ticket);
+            ticketInstance.user_name = ticket.user_name;
+            ticketInstance.organisation_name = ticket.organisation_name;
+            return ticketInstance;
+        });
     }
 
     static async getOneByID(ticket_id) {
@@ -29,7 +38,7 @@ class Ticket {
     }
 
     static async create(data, user_id) {
-        const { status, text, severity, category,date_created, date_completed} = data;
+        const { status, text, severity, category, date_created, date_completed} = data;
         const existingUser = await db.query("SELECT user_id FROM \"user\" WHERE user_id = $1;", [user_id]);
         if (existingUser.rows.length === 0) {
             throw Error("A user with this ID does not exist");
