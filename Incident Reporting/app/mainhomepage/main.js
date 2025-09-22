@@ -5,6 +5,10 @@ const userform = document.querySelector("#userform");
 const useremail = document.querySelector('#useremail')
 const userpassword = document.querySelector('#userpassword')
 
+
+// define fetch req that pulls jwt from local storage, sends to backend in req body or smth, backend absorbs that data and checks if valid. if valid, return all info containing that user (we will only access certain bits on the frontend)
+
+
 orgform.addEventListener('submit', (e) =>{
     e.preventDefault()
     orgLogin()
@@ -19,6 +23,7 @@ async function orgLogin(){
         const response = await fetch("http://localhost:5000/org/login", {
             method: "POST",
             headers: {
+                Accept: "application/json",
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
@@ -57,7 +62,7 @@ async function submitForm(e) {
     localStorage.setItem("token", message.token)
     console.log(message)
     // we need to make the response of a req at this endpoint hold a jwt or any other form of auth
-
+    
 }
 
 

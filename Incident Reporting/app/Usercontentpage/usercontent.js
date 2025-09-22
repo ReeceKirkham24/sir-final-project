@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     let severity = null
     let ticketBody = null
 	if (form) {
+
+
         form.addEventListener('submit', async function(e) {
 			e.preventDefault()
             
@@ -39,7 +41,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                 method: "POST",
                 headers:{
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    authorisation: localStorage.getItem("token")
                 },
                 body: JSON.stringify({
                     status: "Open",
@@ -59,3 +62,13 @@ document.addEventListener('DOMContentLoaded', async function() {
 	}
 
 });
+
+async function getOrgsTickets(){
+    const response = await fetch('insertendpointhere', {
+        headers: {
+            authorisation: localStorage.getItem("token")
+
+        }
+    })
+
+}
