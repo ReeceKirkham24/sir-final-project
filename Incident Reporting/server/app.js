@@ -18,7 +18,7 @@ app.use(logger);
 app.use('/ticket', ticketRouter)
 app.use('/comment', commentRouter)
 app.use("/user", userRouter);
-app.use("/organisation", organisationRouter);
+app.use("/org", organisationRouter);
 app.use('/department', departmentRouter)
 
 app.get("/", (req, res) => {

@@ -1,29 +1,30 @@
-// const db = require("../db/") -------------------------------
+const db = require("../db/connect") 
 
-const { response } = require("../app");
+const bcrypt = require("bcryptjs");
 
 class User {
-  constructor({ User_Id, Name, Email, Org_Id, Department_Id, Password_Hash }) {
-    (this.User_Id = User_Id),
-      (this.Name = Name),
-      (this.Email = Email),
-      (this.Org_Id = Org_Id),
-      (this.Department_Id = Department_Id),
-      (this.Password_Hash = Password_Hash);
+  constructor({ user_id, name, email, org_id, department_id, password_hash }) {
+    this.user_id = user_id;
+    this.name = name;
+    this.email = email;
+    this.org_id = org_id;
+    this.department_id = department_id;
+    this.password_hash = password_hash;
   }
 
   static async getAll() {
-    const response = await db.query("SELECT name FROM users;");
+    const response = await db.query('SELECT * FROM "user";');
     if (response.rows.length === 0) {
       throw Error("No users available");
     }
+    console.log(response.rows);
     return response.rows.map((user) => new User(user));
   }
 
-  static async getOneByUserName(userName) {
+  static async getOneByUserId(user_id) {
     const response = await db.query(
-      "SELECT * FROM users WHERE LOWER(name) = LOWER($1);",
-      [userName]
+      'SELECT * FROM "user" WHERE user_id = $1;',
+      [user_id]
     );
     if (response.rows.length !== 1) {
       throw Error("Unable to locate user");
@@ -32,16 +33,15 @@ class User {
   }
 
   static async create(data) {
-    const { User_Id, Name, Email, Org_Id, Department_Id, Password_Hash } = data;
+    const { name, email, org_id, department_id, password_hash } = data;
     const existingUser = await db.query(
-      "SELECT name FROM user WHERE LOWER(name) = LOWER($1);",
-      [Name]
+      'SELECT name FROM "user" WHERE LOWER(name) = LOWER($1);',
+      [name]
     );
-
     if (existingUser.rows.length === 0) {
       let response = await db.query(
-        "INSERT INTO user (Name, Email, Org_Id, Department_Id, Password_Hash) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-        [Name, Email, Org_Id, Department_Id, Password_Hash]
+        'INSERT INTO "user" (name, email, org_id, department_id, password_hash) VALUES ($1, $2, $3, $4, $5) RETURNING *;',
+        [name, email, org_id, department_id, password_hash]
       );
       return new User(response.rows[0]);
     } else {
@@ -49,22 +49,60 @@ class User {
     }
   }
 
+  static async checkUser(email, password) {
+
+    let response1 = await db.query(
+    `SELECT password_hash 
+     FROM "user"
+     WHERE email = $1;`,
+    [email]
+  )
+    const storedHash = response1.rows[0].password_hash
+    console.log(storedHash)
+    const match = await bcrypt.compare(password, storedHash)
+
+    return match
+
+  }
+
   async update(data) {
     let response = await db.query(
-      "UPDATE user SET EMAIL = COALESCE($2, Email), Org_Id = COALESCE($3, Org_Id), Department_Id  = COALESCE($4, Department_Id), Password_Hash = COALESCE($5, Password_Hash)  WHERE name = $1 RETURNING Name, Email, Org_Id, Department_Id, Password_Hash;",
+      'UPDATE "user" SET email = COALESCE($2, email), org_id = COALESCE($3, org_id), department_id  = COALESCE($4, department_id), password_hash = COALESCE($5, password_hash)  WHERE name = $1 RETURNING *;',
       [
-        this.Name,
-        data.Email,
-        data.Org_Id,
-        data.Department_Id,
-        data.Password_Hash
+        data.name,
+        data.email,
+        data.org_id,
+        data.department_id,
+        data.password_hash
       ]
     );
+    console.log(response.rows);
     if (response.rows.length != 1) {
       throw new Error("Unable to update entries");
     }
     return new User(response.rows[0]);
   }
+
+
+  async destroy(data){
+    const response = await db.query('UPDATE "user" SET email = $1, password_hash = $2, name = $3 WHERE user_id = $4 RETURNING *', [data.email, data.password_hash, data.name, data.user_id])
+    if(response.rows.length != 1){
+      throw new Error("Unable to locate user you wish to destroy")
+    } return new User(response.rows[0])
+  }
 }
+
+async function register(req, res) {
+    try {
+        const data = req.body;
+        const salt = await bcrypt.genSalt(parseInt(process.env.BCRYPT_SALT_ROUNDS));
+        data["passwordhash"] = await bcrypt.hash(data.passwordhash, salt);
+        const result = await UserInfo.create(data);
+        res.status(201).send(result);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
 
 module.exports = User;

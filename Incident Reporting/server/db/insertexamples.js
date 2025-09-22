@@ -18,12 +18,12 @@ const updateUserQuery = `
   WHERE User_Id = $4;
 `;
 
-const updateUserValues = [updatedName, updatedEmail, updatedDeptId, userIdToUpdate];
+const updateUserValues = [updatedName, updatedEmail, updatedDeptId, useridToUpdate];
 
 
 // Delete
 const deleteUserQuery = `DELETE FROM "User" WHERE User_Id = $1;`;
-const deleteUserValues = [userIdToDelete];
+const deleteUserValues = [useridToDelete];
 
 
 
@@ -44,11 +44,11 @@ const updateTicketQuery = `
   SET Status = $1, Date_Completed = $2
   WHERE Ticket_Id = $3;
 `;
-const updateTicketValues = [newTicketStatus, ticketDateCompleted, ticketIdToUpdate];
+const updateTicketValues = [newTicketStatus, ticketDateCompleted, ticketidToUpdate];
 
 // Delete
 const deleteTicketQuery = `DELETE FROM Tickets WHERE Ticket_Id = $1;`;
-const deleteTicketValues = [ticketIdToDelete];
+const deleteTicketValues = [ticketidToDelete];
 
 
 //Comments
@@ -67,11 +67,11 @@ const updateCommentQuery = `
   SET Body = $1
   WHERE Comment_Id = $2;
 `;
-const updateCommentValues = [updatedCommentBody, commentIdToUpdate];
+const updateCommentValues = [updatedCommentBody, commentidToUpdate];
 
 // Delete
 const deleteCommentQuery = `DELETE FROM Comments WHERE Comment_Id = $1;`;
-const deleteCommentValues = [commentIdToDelete];
+const deleteCommentValues = [commentidToDelete];
 
 
 

@@ -4,9 +4,10 @@ const organisationController = require('../controllers/organisations')
 
 const organisationRouter = Router()
 
-organisationRouter.get('/:id', organisationController.showOrg)
-organisationRouter.post('/', organisationController.createOrg)
-organisationRouter.patch('/:id', organisationController.updateOrg)
-organisationRouter.delete('/:id', organisationController.destroyOrg)
+organisationRouter.get('/show', organisationController.showOrg)
+organisationRouter.post('/create', organisationController.createOrg)
+organisationRouter.patch('/update', organisationController.updateOrg)
+organisationRouter.delete('/destroy', organisationController.destroyOrg)
+organisationRouter.post('/login', organisationController.loginOrg)
 
 module.exports = organisationRouter

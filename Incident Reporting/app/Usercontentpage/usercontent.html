@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Dashboard – S.I.R</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="contentstyling.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <ul>
+      <li><a href="../mainhomepage/index.html#hero">Home</a></li>
+      <li><a href="../mainhomepage/index.html#org-login">Organisation Sign In</a></li>
+      <li><a href="../mainhomepage/index.html#user-login">User Sign In</a></li>
+      <li><a href="../mainhomepage/index.html#about">About</a></li>
+    </ul>
+  </nav>
+
+  <div class="scroll-container">
+
+    <!-- SECTION 1: Ticket Submission -->
+    <section class="section ticket-submit">
+      <div class="overlay"></div>
+      <div class="ticket-form-container">
+        <h2>Submit a New Ticket</h2>
+        <form id="ticketForm">
+          <textarea placeholder="Describe your issue..." required></textarea>
+          <button type="submit">Submit Ticket</button>
+        </form>
+        <div id="ticketResult" class="ticket-result">
+          <p>No ticket submitted yet.</p>
+        </div>
+      </div>
+      <div class="scroll-arrow">⌄</div>
+    </section>
+
+    <!-- SECTION 2: Ticket Viewer -->
+    <section class="section ticket-viewer">
+      <div class="overlay"></div>
+      <div class="ticket-viewer-container">
+        
+        <!-- Ticket List -->
+        <div class="ticket-list">
+          <h3>Tickets</h3>
+          <div id="ticketList">
+            <!-- Example tickets -->
+            <div class="ticket-item" data-content="Issue details for Ticket 1" data-severity="High">Ticket 1 – High</div>
+            <div class="ticket-item" data-content="Issue details for Ticket 2" data-severity="Medium">Ticket 2 – Medium</div>
+            <div class="ticket-item" data-content="Issue details for Ticket 3" data-severity="Low">Ticket 3 – Low</div>
+          </div>
+        </div>
+
+        <!-- Ticket Details -->
+        <div class="ticket-detail">
+          <h3>Ticket Details</h3>
+          <p>Select a ticket to view its details here.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Script -->
+  <script>
+    // Ticket submission placeholder
+    const form = document.getElementById('ticketForm');
+    const resultBox = document.getElementById('ticketResult');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const severityLevels = ['Low', 'Medium', 'High'];
+      const randomSeverity = severityLevels[Math.floor(Math.random() * severityLevels.length)];
+      resultBox.innerHTML = `<p><strong>Ticket submitted!</strong> Severity: ${randomSeverity}</p>`;
+    });
+
+    // Ticket viewer functionality
+    const tickets = document.querySelectorAll('.ticket-item');
+    const detailsBox = document.querySelector('.ticket-detail');
+
+    tickets.forEach(ticket => {
+      ticket.addEventListener('click', () => {
+        const content = ticket.getAttribute('data-content');
+        const severity = ticket.getAttribute('data-severity');
+        detailsBox.innerHTML = `
+          <h3>Ticket Details</h3>
+          <p><strong>Severity:</strong> ${severity}</p>
+          <p>${content}</p>
+        `;
+      });
+    });
+  </script>
+
+</body>
+</html>
