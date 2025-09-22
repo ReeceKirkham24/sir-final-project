@@ -1,5 +1,7 @@
 const db = require("../db/connect") 
 
+const bcrypt = require("bcryptjs");
+
 class User {
   constructor({ user_id, name, email, org_id, department_id, password_hash }) {
     this.user_id = user_id;
@@ -47,6 +49,22 @@ class User {
     }
   }
 
+  static async checkUser(email, password) {
+
+    let response1 = await db.query(
+    `SELECT password_hash 
+     FROM "user"
+     WHERE email = $1;`,
+    [email]
+  )
+    const storedHash = response1.rows[0].password_hash
+    console.log(storedHash)
+    const match = await bcrypt.compare(password, storedHash)
+
+    return match
+
+  }
+
   async update(data) {
     let response = await db.query(
       'UPDATE "user" SET name = COALESCE($6, name), email = COALESCE($2, email), org_id = COALESCE($3, org_id), department_id  = COALESCE($4, department_id), password_hash = COALESCE($5, password_hash)  WHERE user_id = $1 RETURNING *;',
@@ -74,5 +92,18 @@ class User {
     } return new User(response.rows[0])
   }
 }
+
+async function register(req, res) {
+    try {
+        const data = req.body;
+        const salt = await bcrypt.genSalt(parseInt(process.env.BCRYPT_SALT_ROUNDS));
+        data["passwordhash"] = await bcrypt.hash(data.passwordhash, salt);
+        const result = await UserInfo.create(data);
+        res.status(201).send(result);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
+
 
 module.exports = User;
