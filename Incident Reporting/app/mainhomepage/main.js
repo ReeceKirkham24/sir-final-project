@@ -1,6 +1,6 @@
-const orgform = document.querySelector('#orgloginform')
-const orgemailinput = document.querySelector('#orgemailinput')
-const orgpasswordinput = document.querySelector('#orgpasswordinput')
+const orgform = document.querySelector('#orgform')
+const orgemailinput = document.querySelector('#orgemail')
+const orgpasswordinput = document.querySelector('#orgpassword')
 const userform = document.querySelector("#userform");
 const useremail = document.querySelector('#useremail')
 const userpassword = document.querySelector('#userpassword')
@@ -39,8 +39,8 @@ async function orgLogin(){
 async function submitForm(e) {
     e.preventDefault()
     const data = { 
-        email: e.target.useremail.value,
-        password: e.target.userpassword.value
+        email: useremail.value,
+        password: userpassword.value
     }
     console.log(data);
 
@@ -55,6 +55,7 @@ async function submitForm(e) {
     const response = await fetch(`http://localhost:5000/user/login`, options)
     const message = await response.json()
     console.log(message)
+    // we need to make the response of a req at this endpoint hold a jwt or any other form of auth
 
 }
 

@@ -4,11 +4,17 @@ const passwordinput = document.querySelector('#password')
 const confirmpasswordinput = document.querySelector('#confirmpassword')
 const submitbtn = document.querySelector('#submit')
 const form = document.querySelector('#signupform')
+const errormsg = document.querySelector('#errormsg')
 
 
 form.addEventListener('submit', (e) =>{
-    e.preventDefault()
-    createNewOrg()
+     e.preventDefault()
+    if(passwordinput.value === confirmpasswordinput.value){
+        createNewOrg()
+    }
+    else{ 
+        errormsg.style.display = "block"
+    }
 })
 
 
@@ -30,8 +36,9 @@ async function createNewOrg(){
              })
         })
         const data = await response.json()
-        console.log(data)
 
+        console.log(data)
+        window.location.href = 'http://127.0.0.1:5501/Incident%20Reporting/app/mainhomepage/index.html#org-login'
     }catch (err){
         console.error(err.message)
     }
