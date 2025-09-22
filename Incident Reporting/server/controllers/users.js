@@ -64,7 +64,35 @@ async function login(req, res) {
   }
 }
 
+async function changepassword(req, res) {
+  try {
+    
+    const token = req.body.token
+    const decodedToken = jwt.verify(token, 'test-secret')
+    const userID = decodedToken.id
+    
+    const currentpassword = req.body.currentpassword
+    const newpassword = req.body.newpassword
+    const repeatpassword = req.body.repeatpassword
 
+
+    if (newpassword !== repeatpassword) {
+      res.json("Passwords don't match")
+    }
+    else if (currentpassword === newpassword && currentpassword === newpassword) {
+      res.json("New password is the same as the current password")
+    }
+    else {
+      console.log(userID, currentpassword, newpassword);
+      const response = await User.changePassword(userID, currentpassword, newpassword)
+      res.json(response)
+      
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+
+  }
+}
 
 
 async function update (req, res) {
@@ -93,6 +121,7 @@ module.exports = {
     index,
     show,
     login,
+    changepassword,
     create,
     update,
     destroy

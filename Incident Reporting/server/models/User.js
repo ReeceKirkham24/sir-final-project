@@ -69,6 +69,39 @@ class User {
 
   }
 
+
+  static async changePassword(userID, oldPassword, newPassword) {
+    
+    // 1. Fetch the user by ID
+    const result = await db.query(
+      `SELECT password_hash FROM "user" WHERE user_id = $1`,
+      [userID]
+    );
+    const user = result.rows[0];
+    console.log(user);
+    if (!user) {
+      return "User not found"
+    }
+
+    // 2. Compare input oldPassword with stored hash
+    const match = await bcrypt.compare(oldPassword, user.password_hash);
+    if (match === false) {
+      return "Current password is incorrect"
+    }
+
+    // 3. Hash the new password
+    const salt = await bcrypt.genSalt(parseInt(process.env.BCRYPT_SALT_ROUNDS));
+    const newPasswordHash = await bcrypt.hash(newPassword, salt);
+
+    // 4. Update the user’s password
+    await db.query(
+      `UPDATE "user" SET password_hash = $1 WHERE user_id = $2`,
+      [newPasswordHash, userID]
+    );
+    return "Successfully changed password"
+
+  }
+
   async update(data) {
     let response = await db.query(
       'UPDATE "user" SET name = COALESCE($6, name), email = COALESCE($2, email), org_id = COALESCE($3, org_id), department_id  = COALESCE($4, department_id), password_hash = COALESCE($5, password_hash)  WHERE user_id = $1 RETURNING *;',
