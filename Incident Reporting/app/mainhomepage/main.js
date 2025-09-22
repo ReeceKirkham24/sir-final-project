@@ -33,6 +33,7 @@ async function orgLogin(){
         })
         const data = await response.json()
         console.log(data)
+        localStorage.setItem("otoken", data.token)
     }catch (err){
         console.error(err.message)
     }
@@ -59,7 +60,7 @@ async function submitForm(e) {
 
     const response = await fetch(`http://localhost:5000/user/login`, options)
     const message = await response.json()
-    localStorage.setItem("token", message.token)
+    localStorage.setItem("utoken", message.token)
     console.log(message)
     // we need to make the response of a req at this endpoint hold a jwt or any other form of auth
     

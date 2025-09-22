@@ -1,5 +1,6 @@
 const Organisation = require('../models/Organisation')
 const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken')
 
 
 async function showOrg(req, res){
@@ -17,7 +18,20 @@ async function loginOrg(req, res){
     try{
         const data = req.body
         const response = await Organisation.login(data)
-        res.status(200).json(response)
+        let message
+        const tokenObj = {
+            token: 'x'
+        }
+        if(response.match == true){
+            message = "Correct Details: User has been granted access."
+            const orgToken = jwt.sign({ id: response.id}, 'test-secret', {
+                expiresIn: "1h"
+            })
+            tokenObj.token = orgToken
+        }else{
+            message = "Incorrect Details: Access Denied"    
+        }
+        res.status(200).json(tokenObj)
     }catch(err){
         res.status(404).json({error: err.message})
     }
