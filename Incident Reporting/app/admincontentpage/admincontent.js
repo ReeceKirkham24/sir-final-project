@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 headers:{
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'authorisation': localStorage.getItem("utoken")
+                    'authorisation': localStorage.getItem("otoken")
                 },
                 body: JSON.stringify({
                     status: "Open",
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         headers:{
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'authorisation': localStorage.getItem("utoken")
+            'authorisation': localStorage.getItem("otoken")
         }
     }
 
