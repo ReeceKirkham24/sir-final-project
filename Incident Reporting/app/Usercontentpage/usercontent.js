@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', async function() {
+
+    const signout = document.querySelector('#signout')
+    signout.addEventListener('click', () =>{
+        localStorage.removeItem('utoken')
+    })
     //stuff to submit ticket and auto severity
 	const form = document.getElementById('ticketForm')
     const resultBox = document.getElementById('ticketResult')
