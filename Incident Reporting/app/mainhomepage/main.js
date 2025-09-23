@@ -41,6 +41,12 @@ async function orgLogin(){
         const data = await response.json()
         console.log(data)
         localStorage.setItem("otoken", data.token)
+        if(data.token !='x'){
+            window.location.href = '../admincontentpage/admincontent.html'
+        }
+        console.log('Incorrect pass')
+        orgemailinput.value = ''
+        orgpasswordinput.value = ''
     }catch (err){
         console.error(err.message)
     }
@@ -107,6 +113,30 @@ async function changeUi() {
         }
     } else if (localStorage.getItem('otoken')) {
         // Handle organisation token updates here
+        const response = await fetch('http://localhost:5000/org/show', {
+            method: 'GET',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                authorisation: localStorage.getItem('otoken')
+            }
+        });
+        const data = await response.json()
+        console.log(data)
+        if(data.err === 'Invalid token'){
+            console.log('INVALID TOKEN - > THIS WILL CHECK TO SEE IF THE TOKEN IS VALID BEFORE RENDERING')
+        } else{
+            console.log('we are a organisation, and we have a valid token')
+            userSigninAnchor.textContent = 'Data analysis';
+            userSigninAnchor.setAttribute('href', '../datavispage/datavis.html');
+
+            orgSigninButton.textContent = 'Dashboard';
+            orgSigninButton.setAttribute('href', '../admincontentpage/admincontent.html');
+
+            aboutButtonAnchor.textContent = 'Settings';
+            aboutButtonAnchor.setAttribute('href', 'settings.html');
+        }
+
     } else {
         console.log('DEV : No user is currently signed in --> there is no JWT in local storage');
     }

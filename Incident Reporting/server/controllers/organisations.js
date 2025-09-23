@@ -5,8 +5,8 @@ const jwt = require('jsonwebtoken')
 
 async function showOrg(req, res){
     try{
-        const data = req.body
-        const response = await Organisation.getOrgById(data.org_id)
+        const org_id = req.user_id
+        const response = await Organisation.getOrgById(org_id)
         res.status(200).json(response)
         
     }catch(err){
