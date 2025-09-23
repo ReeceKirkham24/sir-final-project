@@ -12,8 +12,8 @@
   <!-- NAVBAR -->
   <nav class="navbar">
     <ul>
-      <li><a href="../mainhomepage/index.html#hero">Home</a></li>
-      <li><a href="../mainhomepage/index.html#about">About</a></li>
+      <li><a href="../mainhomepage/index.html">Home</a></li>
+      <li><a href="#about">About</a></li>
       <li class="settings">
         <a href="#">Settings ▾</a>
         <ul class="dropdown">
@@ -26,13 +26,25 @@
 
   <div class="scroll-container">
 
+    <!-- SECTION 0: Intro -->
+    <section id="intro" class="section intro">
+      <div class="overlay" style="background: rgba(255,255,255,0.5);"></div>
+      <div class="intro-container">
+        <h1>Welcome to S.I.R.</h1>
+        <p>S.I.R. is your central hub for reporting incidents and issues efficiently.</p>
+        <p>By submitting a ticket, your problem is logged, prioritized, and assigned to the right team for resolution.</p>
+        <p>Submit a ticket whenever you encounter a technical issue, need support, or want to report something important.</p>
+      </div>
+      <div class="scroll-arrow">⌄</div>
+    </section>
+
     <!-- SECTION 1: Ticket Submission -->
-    <section class="section ticket-submit">
+    <section id="ticketSubmit" class="section ticket-submit">
       <div class="overlay"></div>
       <div class="ticket-form-container">
         <h2>Submit a New Ticket</h2>
         <form id="ticketForm">
-          <textarea placeholder="Describe your issue..." required></textarea>
+          <textarea id="ticketbody" placeholder="Describe your issue..." required></textarea>
           <button type="submit">Submit Ticket</button>
         </form>
         <div id="ticketResult" class="ticket-result">
@@ -43,26 +55,30 @@
     </section>
 
     <!-- SECTION 2: Ticket Viewer -->
-    <section class="section ticket-viewer">
+    <section id="ticketViewer" class="section ticket-viewer">
       <div class="overlay"></div>
       <div class="ticket-viewer-container">
-        
-        <!-- Ticket List -->
         <div class="ticket-list">
           <h3>Tickets</h3>
           <div id="ticketList">
-            <!-- Example tickets -->
-            <div class="ticket-item" data-content="Issue details for Ticket 1" data-severity="High">Ticket 1 – High</div>
-            <div class="ticket-item" data-content="Issue details for Ticket 2" data-severity="Medium">Ticket 2 – Medium</div>
-            <div class="ticket-item" data-content="Issue details for Ticket 3" data-severity="Low">Ticket 3 – Low</div>
+            <!-- Tickets loaded dynamically -->
           </div>
         </div>
-
-        <!-- Ticket Details -->
         <div class="ticket-detail">
           <h3>Ticket Details</h3>
           <p>Select a ticket to view its details here.</p>
         </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: About -->
+    <section id="about" class="section intro">
+      <div class="overlay" style="background: rgba(255,255,255,0.5);"></div>
+      <div class="intro-container">
+        <h2>About S.I.R.</h2>
+        <p>S.I.R. (Support Incident Reporting) allows users to submit tickets for technical issues, requests, or important incidents.</p>
+        <p>Each ticket is logged with a severity and status so our support team can resolve it efficiently.</p>
+        <p>Use this platform to keep track of your issues and see updates in real time.</p>
       </div>
     </section>
 
@@ -82,73 +98,8 @@
     </div>
   </div>
 
-  <!-- Script -->
-  <script>
-    // Ticket submission placeholder
-    const form = document.getElementById('ticketForm');
-    const resultBox = document.getElementById('ticketResult');
-
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const severityLevels = ['Low', 'Medium', 'High'];
-      const randomSeverity = severityLevels[Math.floor(Math.random() * severityLevels.length)];
-      resultBox.innerHTML = `<p><strong>Ticket submitted!</strong> Severity: ${randomSeverity}</p>`;
-    });
-
-    // Ticket viewer functionality
-    const tickets = document.querySelectorAll('.ticket-item');
-    const detailsBox = document.querySelector('.ticket-detail');
-
-    tickets.forEach(ticket => {
-      ticket.addEventListener('click', () => {
-        const content = ticket.getAttribute('data-content');
-        const severity = ticket.getAttribute('data-severity');
-        detailsBox.innerHTML = `
-          <h3>Ticket Details</h3>
-          <p><strong>Severity:</strong> ${severity}</p>
-          <p>${content}</p>
-        `;
-      });
-    });
-
-    // Delete account modal
-    const deleteBtn = document.getElementById('deleteAccountBtn');
-    const modal = document.getElementById('deleteModal');
-    const cancelDelete = document.getElementById('cancelDelete');
-    const confirmDelete = document.getElementById('confirmDelete');
-    const deleteError = document.getElementById('deleteError');
-    const confirmInput = document.getElementById('confirmUsername');
-
-    deleteBtn.addEventListener('click', () => modal.style.display = 'flex');
-    cancelDelete.addEventListener('click', () => modal.style.display = 'none');
-
-    confirmDelete.addEventListener('click', async () => {
-      const enteredUsername = confirmInput.value.trim();
-      const actualUsername = "current_user"; // Replace with actual logged in user (from session)
-
-      if (enteredUsername !== actualUsername) {
-        deleteError.textContent = "Username does not match.";
-        return;
-      }
-
-      try {
-        const response = await fetch("http://localhost:5000/user/delete", {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username: enteredUsername })
-        });
-
-        if (response.ok) {
-          alert("Account deleted successfully.");
-          window.location.href = "../mainhomepage/index.html#hero";
-        } else {
-          deleteError.textContent = "Failed to delete account.";
-        }
-      } catch (err) {
-        deleteError.textContent = "An error occurred. Try again.";
-      }
-    });
-  </script>
+  <!-- Scripts -->
+  <script src="usercontent.js"></script>
 
 </body>
 </html>
