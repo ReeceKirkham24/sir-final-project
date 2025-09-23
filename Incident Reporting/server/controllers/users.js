@@ -66,7 +66,7 @@ async function login(req, res) {
 
 async function changepassword(req, res) {
   try {
-    
+
     const token = req.body.token
     const decodedToken = jwt.verify(token, 'test-secret')
     const userID = decodedToken.id
@@ -77,19 +77,22 @@ async function changepassword(req, res) {
 
 
     if (newpassword !== repeatpassword) {
-      res.json("Passwords don't match")
+      // console.log("Passwords don't match");
+      return res.status(400).json({ message: "Passwords don't match" });
+
     }
     else if (currentpassword === newpassword && currentpassword === newpassword) {
-      res.json("New password is the same as the current password")
+      // console.log("New password is the same as the current password");
+      return res.status(400).json({ message: "New password is the same as the current password" });
     }
     else {
       console.log(userID, currentpassword, newpassword);
       const response = await User.changePassword(userID, currentpassword, newpassword)
-      res.json(response)
+      return res.json({ message: response || "Password updated successfully" });
       
     }
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    return res.status(400).json({ message: error.message });
 
   }
 }
