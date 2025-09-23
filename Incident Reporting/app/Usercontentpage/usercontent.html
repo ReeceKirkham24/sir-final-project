@@ -13,9 +13,14 @@
   <nav class="navbar">
     <ul>
       <li><a href="../mainhomepage/index.html#hero">Home</a></li>
-      <li><a href="../mainhomepage/index.html#org-login">Organisation Sign In</a></li>
-      <li><a href="../mainhomepage/index.html#user-login">User Sign In</a></li>
       <li><a href="../mainhomepage/index.html#about">About</a></li>
+      <li class="settings">
+        <a href="#">Settings ▾</a>
+        <ul class="dropdown">
+          <li><a href="../changepasswordpage/changepassword.html">Change Password</a></li>
+          <li><a href="#" id="deleteAccountBtn">Delete Account</a></li>
+        </ul>
+      </li>
     </ul>
   </nav>
 
@@ -63,6 +68,20 @@
 
   </div>
 
+  <!-- Delete Account Modal -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content">
+      <h3>Delete Account</h3>
+      <p>Type your username to confirm deletion:</p>
+      <input type="text" id="confirmUsername" placeholder="Enter username" />
+      <div class="modal-actions">
+        <button id="confirmDelete">Delete</button>
+        <button id="cancelDelete">Cancel</button>
+      </div>
+      <p id="deleteError" class="error-message"></p>
+    </div>
+  </div>
+
   <!-- Script -->
   <script>
     // Ticket submission placeholder
@@ -90,6 +109,44 @@
           <p>${content}</p>
         `;
       });
+    });
+
+    // Delete account modal
+    const deleteBtn = document.getElementById('deleteAccountBtn');
+    const modal = document.getElementById('deleteModal');
+    const cancelDelete = document.getElementById('cancelDelete');
+    const confirmDelete = document.getElementById('confirmDelete');
+    const deleteError = document.getElementById('deleteError');
+    const confirmInput = document.getElementById('confirmUsername');
+
+    deleteBtn.addEventListener('click', () => modal.style.display = 'flex');
+    cancelDelete.addEventListener('click', () => modal.style.display = 'none');
+
+    confirmDelete.addEventListener('click', async () => {
+      const enteredUsername = confirmInput.value.trim();
+      const actualUsername = "current_user"; // Replace with actual logged in user (from session)
+
+      if (enteredUsername !== actualUsername) {
+        deleteError.textContent = "Username does not match.";
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:5000/user/delete", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: enteredUsername })
+        });
+
+        if (response.ok) {
+          alert("Account deleted successfully.");
+          window.location.href = "../mainhomepage/index.html#hero";
+        } else {
+          deleteError.textContent = "Failed to delete account.";
+        }
+      } catch (err) {
+        deleteError.textContent = "An error occurred. Try again.";
+      }
     });
   </script>
 
