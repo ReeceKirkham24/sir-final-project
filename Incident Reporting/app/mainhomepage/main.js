@@ -41,6 +41,9 @@ async function orgLogin(){
         const data = await response.json()
         console.log(data)
         localStorage.setItem("otoken", data.token)
+        if(data.token != 'x'){
+            window.location.href = '../Usercontentpage/usercontent.html';
+        }
     }catch (err){
         console.error(err.message)
     }

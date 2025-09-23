@@ -45,13 +45,16 @@ document.addEventListener('DOMContentLoaded', async function() {
         method: "GET",
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'authorisation': localStorage.getItem("otoken")
         }
     };
 
     try {
         const ticketResponse = await fetch("http://localhost:5000/ticket", options);
         const ticketsData = await ticketResponse.json();
+
+        console.log(ticketsData);
 
         const ticketList = document.getElementById('ticketList');
         ticketList.innerHTML = "";
