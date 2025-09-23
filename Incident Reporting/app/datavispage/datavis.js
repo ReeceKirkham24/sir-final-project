@@ -20,6 +20,13 @@ window.onload = async function() {
 	const placeholder = document.querySelector('.chart-placeholder');
 	const datasetSelectX = document.getElementById('datasetX');
 	const datasetSelectY = document.getElementById('datasetY');
+	let yValueSelect = document.getElementById('datasetYValue');
+	if (!yValueSelect) {
+		yValueSelect = document.createElement('select');
+		yValueSelect.id = 'datasetYValue';
+		datasetSelectY.parentNode.insertBefore(yValueSelect, datasetSelectY.nextSibling);
+	}
+	yValueSelect.style.display = 'none';
 	let chartInstance = null;
 
 	function loadChartJs(callback) {
@@ -36,10 +43,9 @@ window.onload = async function() {
     let status = {}
     let severity = {}
     let category = {}
-	let month = {}
+	let month = {"January": 0, "February": 0, "March": 0, "April": 0, "May": 0, "June": 0, "July": 0, "August": 0, "September": 0, "October": 0, "November": 0, "December": 0}
 	let department = {}
 	let author = {}
-	let isOpen = {true: 0, false: 0}
 
     for(let i = 0; i < ticketResources.length; i++){
         if(status[ticketResources[i].status]){
@@ -63,39 +69,91 @@ window.onload = async function() {
             category[ticketResources[i].category]=1
         }
 
-		if(author[ticketResources[i].author]){
-            author[ticketResources[i].author]++
+		if(author[ticketResources[i].user_name]){
+            author[ticketResources[i].user_name]++
         }
         else{
-            author[ticketResources[i].author]=1
+            author[ticketResources[i].user_name]=1
         }
-		
+
+		if(month[new Date(ticketResources[i].date_created).toLocaleString('default', { month: 'long' })]){
+            month[new Date(ticketResources[i].date_created).toLocaleString('default', { month: 'long' })]++
+        }
+        else{
+            month[new Date(ticketResources[i].date_created).toLocaleString('default', { month: 'long' })]=1
+        }
+
+		if(department[ticketResources[i].department_name]){
+            department[ticketResources[i].department_name]++
+        }
+        else{
+            department[ticketResources[i].department_name]=1
+        }
     }
-	function getChartData(selectedDatasetX, selectedDatasetY) {
-		if (selectedDatasetX === 'status') {
-			return {
-				labels: Object.keys(status),
-				data: Object.values(status)
-			};
-		} else if (selectedDatasetX === 'severity') {
-			return {
-				labels: Object.keys(severity),
-				data: Object.values(severity)
-			};
-		} else if (selectedDatasetX === 'categories') {
-			return {
-				labels: Object.keys(category),
-				data: Object.values(category)
-			};
-		} else if (selectedDatasetX === 'author') {
-			return {
-				labels: Object.keys(author),
-				data: Object.values(author)
-			};
+	console.log(month);
+	function getDatasetProperty(key) {
+		switch (key) {
+			case 'status': return 'status';
+			case 'severity': return 'severity';
+			case 'categories': return 'category';
+			case 'author': return 'user_name';
+			case 'timePeriod': return 'date_created';
+			case 'department': return 'department_name';
+			default: return null;
+		}
+	}
+
+	function getAllDatasetValues(key) {
+		const prop = getDatasetProperty(key);
+		if (!prop) return [];
+		if (key == 'timePeriod') {
+			return Object.keys(month);
+		}
+		const values = new Set();
+		for (const t of ticketResources) {
+			if (t[prop]) values.add(t[prop]);
+		}
+		return Array.from(values);
+	}
+
+	function getChartData(selectedDatasetX, selectedDatasetY, selectedYValue) {
+		let filteredTickets = ticketResources;
+		if (selectedDatasetY && selectedDatasetY !== 'none' && selectedYValue) {
+			const yProp = getDatasetProperty(selectedDatasetY);
+			if (selectedDatasetY == 'timePeriod') {
+				filteredTickets = ticketResources.filter(t => {
+					const monthName = new Date(t.date_created).toLocaleString('default', { month: 'long' });
+					return monthName == selectedYValue;
+				});
+			} else {
+				filteredTickets = ticketResources.filter(t => t[yProp] == selectedYValue);
+			}
+		}
+
+		const xProp = getDatasetProperty(selectedDatasetX);
+		let counts = {};
+		if (selectedDatasetX == 'timePeriod') {
+			counts = {"January": 0, "February": 0, "March": 0, "April": 0, "May": 0, "June": 0, "July": 0, "August": 0, "September": 0, "October": 0, "November": 0, "December": 0};
+			for (const t of filteredTickets) {
+				const monthName = new Date(t.date_created).toLocaleString('default', { month: 'long' });
+				if (counts[monthName] !== undefined) counts[monthName]++;
+			}
+		} else if (xProp) {
+			for (const t of filteredTickets) {
+				const val = t[xProp];
+				if (val) {
+					counts[val] = (counts[val] || 0) + 1;
+				}
+			}
+		}
+		if (selectedDatasetX == 'timePeriod') {
+			for (const m in counts) {
+				if (counts[m] == 0) delete counts[m];
+			}
 		}
 		return {
-			labels: ['Variable 1', 'Variable 2', 'Variable 3'],
-			data: [33, 33, 34]
+			labels: Object.keys(counts),
+			data: Object.values(counts)
 		};
 	}
 
@@ -111,13 +169,13 @@ window.onload = async function() {
 		return colors;
 	}
 
-	function renderChart(selectedDatasetX, selectedDatasetY) {
+	function renderChart(selectedDatasetX, selectedDatasetY, selectedYValue) {
 		placeholder.innerHTML = '';
 		let canvas = document.createElement('canvas');
 		canvas.id = 'pieChart';
 		placeholder.appendChild(canvas);
 		const ctx = document.getElementById('pieChart').getContext('2d');
-		const chartData = getChartData(selectedDatasetX, selectedDatasetY);
+		const chartData = getChartData(selectedDatasetX, selectedDatasetY, selectedYValue);
 		if (chartInstance) {
 			chartInstance.destroy();
 		}
@@ -140,20 +198,51 @@ window.onload = async function() {
 					},
 					title: {
 						display: true,
-						text: 'Pie Chart (' + selectedDatasetX.charAt(0).toUpperCase() + selectedDatasetX.slice(1) + ')'
+						text: 'Pie Chart (' + selectedDatasetX.charAt(0).toUpperCase() + selectedDatasetX.slice(1) + (selectedDatasetY && selectedDatasetY !== 'none' && selectedYValue ? ' filtered by ' + selectedDatasetY + ': ' + selectedYValue : '') + ')'
 					}
 				}
 			}
 		});
 	}
 
+	function updateYValueDropdown(selectedDatasetY) {
+		if (selectedDatasetY == 'none') {
+			yValueSelect.style.display = 'none';
+			yValueSelect.innerHTML = '';
+			return;
+		}
+		let values = getAllDatasetValues(selectedDatasetY);
+		if (selectedDatasetY == 'severity') {
+			const severityOrder = ["Critical", "High", "Medium", "Low"];
+			values = severityOrder.filter(v => values.includes(v));
+		}
+		yValueSelect.innerHTML = '';
+		for (const v of values) {
+			const opt = document.createElement('option');
+			opt.value = v;
+			opt.textContent = v;
+			yValueSelect.appendChild(opt);
+		}
+		yValueSelect.style.display = 'inline-block';
+	}
+
 	loadChartJs(function() {
-		renderChart(datasetSelectX.value, datasetSelectY.value);
+		let selectedYValue = null;
+		updateYValueDropdown(datasetSelectY.value);
+		if (datasetSelectY.value !== 'none') {
+			selectedYValue = yValueSelect.value;
+		}
+		renderChart(datasetSelectX.value, datasetSelectY.value, selectedYValue);
+
 		datasetSelectX.addEventListener('change', function() {
-			renderChart(datasetSelectX.value, datasetSelectY.value);
+			renderChart(datasetSelectX.value, datasetSelectY.value, yValueSelect.value);
 		});
 		datasetSelectY.addEventListener('change', function() {
-			renderChart(datasetSelectX.value, datasetSelectY.value);
+			updateYValueDropdown(datasetSelectY.value);
+			renderChart(datasetSelectX.value, datasetSelectY.value, yValueSelect.value);
+		});
+		yValueSelect.addEventListener('change', function() {
+			renderChart(datasetSelectX.value, datasetSelectY.value, yValueSelect.value);
 		});
 	});
 }
