@@ -6,10 +6,10 @@ const { authenticator } = require('../middleware/authenticator')
 const commentRouter = Router()
 
 
-commentRouter.get('/', commentController.index)
-commentRouter.get('/show', commentController.showId)
-commentRouter.post('/create', commentController.create)
-commentRouter.patch('/update', commentController.update)
-commentRouter.delete('/destroy', commentController.destroy)
+commentRouter.get('/', authenticator, commentController.index)
+commentRouter.get('/show', authenticator, commentController.showId)
+commentRouter.post('/create', authenticator, commentController.create)
+commentRouter.patch('/update', authenticator, commentController.update)
+commentRouter.delete('/destroy', authenticator, commentController.destroy)
 
 module.exports = commentRouter

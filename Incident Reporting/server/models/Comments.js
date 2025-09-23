@@ -9,11 +9,18 @@ class Comment{
     }
 
     static async getAll(){
-        const response = await db.query("SELECT * FROM comments;")
+        const response = await db.query(`
+            SELECT c.*, u.name AS user_name
+            FROM comments c
+            JOIN "user" u ON c.user_id = u.user_id;
+        `)
         if (response.rows.length === 0) {
             throw Error("No comments available")
         }
-        return response.rows.map(comment => new Comment(comment))
+        return response.rows.map(comment => {
+            // Attach user_name to the comment object
+            return { ...new Comment(comment), user_name: comment.user_name }
+        })
     }
 
     static async getOneByID(comment) {
