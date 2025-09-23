@@ -2,11 +2,17 @@ const Ticket = require('../models/Tickets')
 
 async function index(req, res) {
     try {
-        const data = req.body
-        const tickets = await Ticket.getAll()
-        res.status(200).json(tickets)
+        const db = require('../db/connect');
+        const userId = req.user_id;
+        const userResult = await db.query('SELECT org_id FROM "user" WHERE user_id = $1;', [userId]);
+        if (userResult.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        const orgId = userResult.rows[0].org_id;
+        const tickets = await Ticket.getAll(orgId);
+        res.status(200).json(tickets);
     } catch (err) {
-        res.status(500).json({error: err.message})
+        res.status(500).json({error: err.message});
     }
 }
 

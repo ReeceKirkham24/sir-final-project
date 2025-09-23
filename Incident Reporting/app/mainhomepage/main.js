@@ -1,12 +1,17 @@
+
 const orgform = document.querySelector('#orgform')
 const orgemailinput = document.querySelector('#orgemail')
 const orgpasswordinput = document.querySelector('#orgpassword')
 const userform = document.querySelector("#userform");
 const useremail = document.querySelector('#useremail')
 const userpassword = document.querySelector('#userpassword')
+const orgSigninButton = document.querySelector('#org-button-a')
+const userSigninAnchor = document.querySelector('#user-button-a');
+const aboutButtonAnchor = document.querySelector('#about-button-a')
 
 
-// define fetch req that pulls jwt from local storage, sends to backend in req body or smth, backend absorbs that data and checks if valid. if valid, return all info containing that user (we will only access certain bits on the frontend)
+
+document.addEventListener('DOMContentLoaded', changeUi)
 
 
 orgform.addEventListener('submit', (e) =>{
@@ -16,6 +21,8 @@ orgform.addEventListener('submit', (e) =>{
 
 
 userform.addEventListener("submit", submitForm)
+
+
 
 
 async function orgLogin(){
@@ -61,9 +68,48 @@ async function submitForm(e) {
     const response = await fetch(`http://localhost:5000/user/login`, options)
     const message = await response.json()
     localStorage.setItem("utoken", message.token)
-    console.log(message)
+    if(message.token != 'x'){
+        window.location.href = '../Usercontentpage/usercontent.html';
+    }
     // we need to make the response of a req at this endpoint hold a jwt or any other form of auth
     
+}
+
+
+async function changeUi() {
+    if (localStorage.getItem('utoken')) {
+        const response = await fetch('http://localhost:5000/user/show', {
+            method: 'GET',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                authorisation: localStorage.getItem('utoken')
+            }
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        if (data.err === 'Invalid token') {
+            console.log('INVALID TOKEN - > THIS WILL CHECK TO SEE IF THE TOKEN IS VALID BEFORE RENDERING');
+        } else {
+            console.log('we are a user, and we have a valid token');
+            // now, update the ui to allow user to navigate to relevant tabs
+            userSigninAnchor.textContent = 'Settings';
+            userSigninAnchor.setAttribute('href', 'usersettings.html');
+
+            orgSigninButton.textContent = 'Dashboard';
+            orgSigninButton.setAttribute('href', '../Usercontentpage/usercontent.html');
+
+            aboutButtonAnchor.textContent = 'Profile';
+            aboutButtonAnchor.setAttribute('href', 'profile.html');
+
+        }
+    } else if (localStorage.getItem('otoken')) {
+        // Handle organisation token updates here
+    } else {
+        console.log('DEV : No user is currently signed in --> there is no JWT in local storage');
+    }
 }
 
 
@@ -80,10 +126,6 @@ async function submitForm(e) {
 
 
 
-// user makes req to an endpoint that triggers api > passes their login credentials to backend >
-//  backend looks for user where their unique details are same(i.e email) >
-//  if there is 1, remove hashin on their pass and compare to user data >
-//  if there is match, return jwt and other auth stuff
 
 
 

@@ -33,11 +33,26 @@
     <div class="analyse-container">
       <div class="analyse-controls">
         <h2>Select Data to Analyse</h2>
-        <label for="dataset">Choose Dataset:</label>
-        <select id="dataset">
-          <option value="categories">Tickets by category</option>
-          <option value="severity">Tickets by Severity</option>
-          <option value="status">Tickets by Status</option>
+        <label for="datasetX">Choose First Dataset:</label>
+        <select id="datasetX">
+          <option value="categories">Category</option>
+          <option value="severity">Severity</option>
+          <option value="status">Status</option>
+          <option value="timePeriod">Time Period</option>
+          <option value="department">Department</option>
+          <option value="author">Author</option>
+          <option value="isOpen">Is the Ticket open?</option>
+        </select>
+        <label for="datasetY">Choose Second Dataset:</label>
+        <select id="datasetY">
+          <option value="categories">Category</option>
+          <option value="severity">Severity</option>
+          <option value="status">Status</option>
+          <option value="timePeriod">Time Period</option>
+          <option value="department">Department</option>
+          <option value="author">Author</option>
+          <option value="isOpen">Is the Ticket open?</option>
+          <option value="none">Status</option>
         </select>
       </div>
       <div class="analyse-chart">
