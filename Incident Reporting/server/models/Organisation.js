@@ -26,10 +26,15 @@ class Organisation{
         if(response.rows.length != 1){
             throw Error("There is no organisation registered with this email")
         }
+        const org_id = response.rows[0].org_id
         const userPassInput = data.password
-        if(await bcrypt.compare(userPassInput, response.rows[0].password_hash) == true){
-            return new Organisation(response.rows[0])   
-        } throw new Error("Incorrect sign in credentials")
+        const match = await bcrypt.compare(userPassInput, response.rows[0].password_hash)
+        // if(await bcrypt.compare(userPassInput, response.rows[0].password_hash) == true){
+        //     return new Organisation(response.rows[0])
+            return {
+                match: match,
+                id: org_id
+            }
     }
 
 

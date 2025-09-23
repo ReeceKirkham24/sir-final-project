@@ -28,8 +28,8 @@ class Ticket {
         return new Ticket(response.rows[0]);
     }
 
-    static async create(data) {
-        const { status, text, severity, category, user_id, date_created, date_completed} = data;
+    static async create(data, user_id) {
+        const { status, text, severity, category,date_created, date_completed} = data;
         const existingUser = await db.query("SELECT user_id FROM \"user\" WHERE user_id = $1;", [user_id]);
         if (existingUser.rows.length === 0) {
             throw Error("A user with this ID does not exist");

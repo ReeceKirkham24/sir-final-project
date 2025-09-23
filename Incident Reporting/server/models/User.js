@@ -52,28 +52,66 @@ class User {
   static async checkUser(email, password) {
 
     let response1 = await db.query(
-    `SELECT password_hash 
+    `SELECT * 
      FROM "user"
      WHERE email = $1;`,
     [email]
   )
     const storedHash = response1.rows[0].password_hash
+    const user_id = response1.rows[0].user_id
     console.log(storedHash)
     const match = await bcrypt.compare(password, storedHash)
 
-    return match
+    return {
+      match: match,
+      id: user_id
+    }
+
+  }
+
+
+  static async changePassword(userID, oldPassword, newPassword) {
+    
+    // 1. Fetch the user by ID
+    const result = await db.query(
+      `SELECT password_hash FROM "user" WHERE user_id = $1`,
+      [userID]
+    );
+    const user = result.rows[0];
+    console.log(user);
+    if (!user) {
+      return "User not found"
+    }
+
+    // 2. Compare input oldPassword with stored hash
+    const match = await bcrypt.compare(oldPassword, user.password_hash);
+    if (match === false) {
+      return "Current password is incorrect"
+    }
+
+    // 3. Hash the new password
+    const salt = await bcrypt.genSalt(parseInt(process.env.BCRYPT_SALT_ROUNDS));
+    const newPasswordHash = await bcrypt.hash(newPassword, salt);
+
+    // 4. Update the user’s password
+    await db.query(
+      `UPDATE "user" SET password_hash = $1 WHERE user_id = $2`,
+      [newPasswordHash, userID]
+    );
+    return "Successfully changed password"
 
   }
 
   async update(data) {
     let response = await db.query(
-      'UPDATE "user" SET email = COALESCE($2, email), org_id = COALESCE($3, org_id), department_id  = COALESCE($4, department_id), password_hash = COALESCE($5, password_hash)  WHERE name = $1 RETURNING *;',
+      'UPDATE "user" SET name = COALESCE($6, name), email = COALESCE($2, email), org_id = COALESCE($3, org_id), department_id  = COALESCE($4, department_id), password_hash = COALESCE($5, password_hash)  WHERE user_id = $1 RETURNING *;',
       [
-        data.name,
+        data.user_id,
         data.email,
         data.org_id,
         data.department_id,
-        data.password_hash
+        data.password_hash,
+        data.name
       ]
     );
     console.log(response.rows);
