@@ -15,8 +15,8 @@ async function index(req, res) {
 
 async function show(req, res) {
     try {
-        const data = req.params
-        const user = await User.getOneByUserId(data.user_id);
+        const data = req.user_id
+        const user = await User.getOneByUserId(data);
         res.status(200).json(user);
     }
     catch (err) {

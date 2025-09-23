@@ -6,7 +6,7 @@ const { authenticator } = require('../middleware/authenticator')
 const userRouter = Router();
 
 userRouter.get("/", userController.index);
-userRouter.get("/show",  userController.show);
+userRouter.get("/show", authenticator, userController.show);
 userRouter.post("/login", userController.login);
 userRouter.post("/changepassword", userController.changepassword);
 userRouter.post("/create", userController.create);
