@@ -41,18 +41,12 @@ async function orgLogin(){
         const data = await response.json()
         console.log(data)
         localStorage.setItem("otoken", data.token)
-<<<<<<< HEAD
         if(data.token !='x'){
             window.location.href = '../admincontentpage/admincontent.html'
         }
         console.log('Incorrect pass')
         orgemailinput.value = ''
         orgpasswordinput.value = ''
-=======
-        if(data.token != 'x'){
-            window.location.href = '../Usercontentpage/usercontent.html';
-        }
->>>>>>> 4b4b09b024d7fd4e06c04706453812958ac6f335
     }catch (err){
         console.error(err.message)
     }
