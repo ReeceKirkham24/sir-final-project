@@ -6,7 +6,6 @@
   <title>Admin Dashboard – S.I.R</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="adminstyling.css" />
-  <script defer src="./admincontent.js"></script>
 </head>
 <body>
 
@@ -75,5 +74,36 @@
     </section>
 
   </div>
+
+  <!-- Script -->
+  <script>
+    // Ticket submission placeholder
+    const form = document.getElementById('ticketForm');
+    const resultBox = document.getElementById('ticketResult');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const severityLevels = ['Low', 'Medium', 'High'];
+      const randomSeverity = severityLevels[Math.floor(Math.random() * severityLevels.length)];
+      resultBox.innerHTML = `<p><strong>Ticket submitted!</strong> Severity: ${randomSeverity}</p>`;
+    });
+
+    // Ticket viewer functionality
+    const tickets = document.querySelectorAll('.ticket-item');
+    const detailsBox = document.querySelector('.ticket-detail');
+
+    tickets.forEach(ticket => {
+      ticket.addEventListener('click', () => {
+        const content = ticket.getAttribute('data-content');
+        const severity = ticket.getAttribute('data-severity');
+        detailsBox.innerHTML = `
+          <h3>Ticket Details</h3>
+          <p><strong>Severity:</strong> ${severity}</p>
+          <p>${content}</p>
+        `;
+      });
+    });
+  </script>
+
 </body>
 </html>
