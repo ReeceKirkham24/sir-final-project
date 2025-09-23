@@ -14,9 +14,10 @@ class Ticket {
 
     static async getAll(org_id) {
         const response = await db.query(`
-            SELECT t.*, u.name AS user_name, o.name AS organisation_name FROM tickets t 
-            JOIN "user" u ON t.user_id = u.user_id 
+            SELECT t.*, u.name AS user_name, o.name AS organisation_name, d.name AS department_name FROM tickets t
+            JOIN "user" u ON t.user_id = u.user_id
             JOIN organisation o ON u.org_id = o.org_id
+            LEFT JOIN department d ON u.department_id = d.department_id
             WHERE o.org_id = $1;`, [org_id]);
         if (response.rows.length === 0) {
             throw Error("No tickets available");
@@ -25,6 +26,7 @@ class Ticket {
             const ticketInstance = new Ticket(ticket);
             ticketInstance.user_name = ticket.user_name;
             ticketInstance.organisation_name = ticket.organisation_name;
+            ticketInstance.department_name = ticket.department_name;
             return ticketInstance;
         });
     }
