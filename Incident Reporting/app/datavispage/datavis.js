@@ -1,7 +1,15 @@
 window.onload = async function() {
 	let ticketResources = [];
 	try {
-		const response = await fetch('http://localhost:5000/ticket');
+		const options = {
+			method: "GET",
+			headers:{
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'authorisation': localStorage.getItem("utoken")
+			}
+		}
+		const response = await fetch('http://localhost:5000/ticket', options);
 		if (!response.ok) throw new Error('Network response was not ok');
 		ticketResources = await response.json();
 		console.log('Fetched tickets:', ticketResources);
@@ -10,7 +18,8 @@ window.onload = async function() {
 	}
 
 	const placeholder = document.querySelector('.chart-placeholder');
-	const datasetSelect = document.getElementById('dataset');
+	const datasetSelectX = document.getElementById('datasetX');
+	const datasetSelectY = document.getElementById('datasetY');
 	let chartInstance = null;
 
 	function loadChartJs(callback) {
@@ -27,6 +36,10 @@ window.onload = async function() {
     let status = {}
     let severity = {}
     let category = {}
+	let month = {}
+	let department = {}
+	let author = {}
+	let isOpen = {true: 0, false: 0}
 
     for(let i = 0; i < ticketResources.length; i++){
         if(status[ticketResources[i].status]){
@@ -49,23 +62,35 @@ window.onload = async function() {
         else{
             category[ticketResources[i].category]=1
         }
+
+		if(author[ticketResources[i].author]){
+            author[ticketResources[i].author]++
+        }
+        else{
+            author[ticketResources[i].author]=1
+        }
+		
     }
-    console.log(category);
-	function getChartData(selectedDataset) {
-		if (selectedDataset === 'status') {
+	function getChartData(selectedDatasetX, selectedDatasetY) {
+		if (selectedDatasetX === 'status') {
 			return {
 				labels: Object.keys(status),
 				data: Object.values(status)
 			};
-		} else if (selectedDataset === 'severity') {
+		} else if (selectedDatasetX === 'severity') {
 			return {
 				labels: Object.keys(severity),
 				data: Object.values(severity)
 			};
-		} else if (selectedDataset === 'categories') {
+		} else if (selectedDatasetX === 'categories') {
 			return {
 				labels: Object.keys(category),
 				data: Object.values(category)
+			};
+		} else if (selectedDatasetX === 'author') {
+			return {
+				labels: Object.keys(author),
+				data: Object.values(author)
 			};
 		}
 		return {
@@ -86,13 +111,13 @@ window.onload = async function() {
 		return colors;
 	}
 
-	function renderChart(selectedDataset) {
+	function renderChart(selectedDatasetX, selectedDatasetY) {
 		placeholder.innerHTML = '';
 		let canvas = document.createElement('canvas');
 		canvas.id = 'pieChart';
 		placeholder.appendChild(canvas);
 		const ctx = document.getElementById('pieChart').getContext('2d');
-		const chartData = getChartData(selectedDataset);
+		const chartData = getChartData(selectedDatasetX, selectedDatasetY);
 		if (chartInstance) {
 			chartInstance.destroy();
 		}
@@ -115,7 +140,7 @@ window.onload = async function() {
 					},
 					title: {
 						display: true,
-						text: 'Pie Chart (' + selectedDataset.charAt(0).toUpperCase() + selectedDataset.slice(1) + ')'
+						text: 'Pie Chart (' + selectedDatasetX.charAt(0).toUpperCase() + selectedDatasetX.slice(1) + ')'
 					}
 				}
 			}
@@ -123,9 +148,12 @@ window.onload = async function() {
 	}
 
 	loadChartJs(function() {
-		renderChart(datasetSelect.value);
-		datasetSelect.addEventListener('change', function() {
-			renderChart(datasetSelect.value);
+		renderChart(datasetSelectX.value, datasetSelectY.value);
+		datasetSelectX.addEventListener('change', function() {
+			renderChart(datasetSelectX.value, datasetSelectY.value);
+		});
+		datasetSelectY.addEventListener('change', function() {
+			renderChart(datasetSelectX.value, datasetSelectY.value);
 		});
 	});
 }
