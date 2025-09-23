@@ -42,7 +42,7 @@ async function orgLogin(){
         console.log(data)
         localStorage.setItem("otoken", data.token)
         if(data.token != 'x'){
-            window.location.href = '../Usercontentpage/usercontent.html';
+            window.location.href = '../admincontentpage/admincontent.html';
         }
     }catch (err){
         console.error(err.message)
