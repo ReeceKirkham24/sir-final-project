@@ -50,11 +50,17 @@ CREATE TABLE tickets (
 CREATE TABLE comments (
     comment_id INT GENERATED ALWAYS AS IDENTITY,
     ticket_id INT NOT NULL,
-    user_id INT NOT NULL,
+    user_id INT,
+    org_id INT,
     body TEXT NOT NULL,
     PRIMARY KEY (comment_id),
     FOREIGN KEY (ticket_id) REFERENCES tickets(ticket_id),
-    FOREIGN KEY (user_id) REFERENCES "user"(user_id)
+    FOREIGN KEY (user_id) REFERENCES "user"(user_id),
+    FOREIGN KEY (org_id) REFERENCES organisation(org_id),
+    CHECK (
+        (user_id IS NOT NULL AND org_id IS NULL) OR
+        (user_id IS NULL AND org_id IS NOT NULL)
+    )
 );
 
 

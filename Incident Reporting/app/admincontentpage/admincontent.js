@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       } else {
         commentsHtml += "<ul style='padding-left:0;'>";
         ticketComments.forEach((comment) => {
-          commentsHtml += `<li style='list-style:none; margin-bottom:12px;'><strong>${comment.user_name}:</strong> ${comment.body}</li>`;
+          commentsHtml += `<li style='list-style:none; margin-bottom:12px;'><strong>${comment.user_name || comment.org_name}:</strong> ${comment.body}</li>`;
         });
         commentsHtml += "</ul>";
       }
@@ -120,7 +120,57 @@ document.addEventListener("DOMContentLoaded", async function () {
         <p><strong>Date Created:</strong> ${new Date(ticket.date_created).toLocaleString()}</p>
         <p><strong>Date Completed:</strong> ${completed}</p>
         ${commentsHtml}
+        <p></p>
+        <h3>Post New Comment:</h3>
+        <form id="commentForm">
+          <textarea id="commentText"></textarea>
+          <button type="submit">Post Comment</button>
+        </form>
       `;
+      const commentForm = document.getElementById("commentForm");
+      if (commentForm) {
+        commentForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const commentText = document.getElementById("commentText").value;
+          if (!commentText.trim()) {
+            alert("Comment cannot be empty.");
+            return;
+          }
+          const options = {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              authorisation: localStorage.getItem("otoken"),
+              userType: "org"
+            },
+            body: JSON.stringify({
+              ticket_id: ticket.ticket_id,
+              body: commentText,
+            }),
+          };
+          try {
+            const response = await fetch("http://localhost:5000/comment/create", options);
+            if (!response.ok) {
+              const error = await response.json();
+              alert("Error posting comment: " + (error.error || response.status));
+              return;
+            }
+            const newComment = await response.json();
+            const commentsSection = detailDiv.querySelector('.comments-section ul');
+            if (commentsSection) {
+              const li = document.createElement('li');
+              li.style.listStyle = 'none';
+              li.style.marginBottom = '12px';
+              li.innerHTML = `<strong>${newComment.user_name || 'You'}:</strong> ${newComment.body}`;
+              commentsSection.appendChild(li);
+            }
+            commentForm.reset();
+          } catch (err) {
+            alert("Failed to post comment.");
+          }
+        });
+      }
     });
     ticketList.appendChild(ticketDiv);
   });

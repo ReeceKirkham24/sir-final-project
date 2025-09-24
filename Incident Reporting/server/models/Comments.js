@@ -10,17 +10,20 @@ class Comment{
 
     static async getAll(){
         const response = await db.query(`
-            SELECT c.*, u.name AS user_name
+            SELECT c.*, 
+                u.name AS user_name, 
+                o.name AS org_name
             FROM comments c
-            JOIN "user" u ON c.user_id = u.user_id;
-        `)
+            LEFT JOIN "user" u ON c.user_id = u.user_id
+            LEFT JOIN organisation o ON c.org_id = o.org_id;
+        `);
         if (response.rows.length === 0) {
-            throw Error("No comments available")
+            throw Error("No comments available");
         }
         return response.rows.map(comment => {
-            // Attach user_name to the comment object
-            return { ...new Comment(comment), user_name: comment.user_name }
-        })
+            // Attach user_name or org_name to the comment object
+            return { ...new Comment(comment), user_name: comment.user_name, org_name: comment.org_name };
+        });
     }
 
     static async getOneByID(comment) {
@@ -31,21 +34,38 @@ class Comment{
         return new Comment(response.rows[0])
     }
 
-    static async create(data, user_id){
-        const {ticket_id, body} = data
+    static async create(data, id, userType){
+        const { ticket_id, body } = data;
 
-        const existingUser = await db.query("SELECT user_id FROM \"user\" WHERE user_id = $1;", [user_id])
-        if (existingUser.rows.length === 0) {
-            throw Error("A user with this ID does not exist")
-        }
-
-        const existingTicket = await db.query("SELECT ticket_id FROM tickets WHERE ticket_id = $1;", [ticket_id])
+        const existingTicket = await db.query("SELECT ticket_id FROM tickets WHERE ticket_id = $1;", [ticket_id]);
         if (existingTicket.rows.length === 0) {
-            throw Error("A ticket with this ID does not exist")
+            throw Error("A ticket with this ID does not exist");
         }
 
-        const response = await db.query("INSERT INTO comments (ticket_id, user_id, body) VALUES ($1, $2, $3) RETURNING *;", [ticket_id, user_id, body])
-            return new Comment(response.rows[0])
+
+        if (userType === "org") {
+            // Check organisation exists
+            const existingOrg = await db.query("SELECT org_id FROM organisation WHERE org_id = $1;", [id]);
+            if (existingOrg.rows.length === 0) {
+                throw Error("An organisation with this ID does not exist");
+            }
+            const response = await db.query(
+                "INSERT INTO comments (ticket_id, org_id, body) VALUES ($1, $2, $3) RETURNING *;",
+                [ticket_id, id, body]
+            );
+            return new Comment(response.rows[0]);
+        } else {
+            // Check user exists
+            const existingUser = await db.query("SELECT user_id FROM \"user\" WHERE user_id = $1;", [id]);
+            if (existingUser.rows.length === 0) {
+                throw Error("A user with this ID does not exist");
+            }
+            const response = await db.query(
+                "INSERT INTO comments (ticket_id, user_id, body) VALUES ($1, $2, $3) RETURNING *;",
+                [ticket_id, id, body]
+            );
+            return new Comment(response.rows[0]);
+        }
     }
 
     async update(data){

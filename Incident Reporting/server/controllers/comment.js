@@ -24,7 +24,9 @@ async function create(req, res) {
     try {
         const data = req.body
         const id = req.user_id
-        const newComment = await Comment.create(data, id)
+        const userType = req.headers.usertype;
+        console.log(userType);
+        const newComment = await Comment.create(data, id, userType)
         res.status(201).json(newComment)
     } catch (err) {
         res.status(400).json({error: err.message})
