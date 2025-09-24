@@ -21,26 +21,26 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             // section which calls api, if testing ticket creating, please disable this as we onlu have 100 calls per month
 
-            // await fetch('https://www.nyckel.com/v1/functions/support-request-urgency/invoke', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Authorization': 'Bearer ' + 'eyJhbGciOiJSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJpc3MiOiJodHRwczovL3d3dy5ueWNrZWwuY29tIiwibmJmIjoxNzU4NjM1MTE4LCJpYXQiOjE3NTg2MzUxMTgsImV4cCI6MTc1ODYzODcxOCwic2NvcGUiOlsiYXBpIl0sImNsaWVudF9pZCI6IjFudTJhYWEyajJ6NjR3bHdlMHdmZ3VwM2k5eWQ2d2FtIiwianRpIjoiQTM2MkI5MkYwMTNDRjVDMkY5QjM4QkI0RUIzNzFBQkUifQ.XV5cZmw-Y1GeHyFJMfBVysDlgBI4qFUmHHja4MwiG4F-jI9M5aJd_eMmqVK280Ul_hAde6fzRsI_Kr-FbO8yJn4ZB1zGP_Gy0NihTreHgy8VE7-DDORADrb8EepqlBQSYo-HkBJZ9CsqWtbfu9H9oLU2yYsw-MI9twAYMhrF6Bb58fhwfVDFT8pxQFkGAoSMn_GqHkUBvhoaIRhYRHw5Fqnw1vzUulx_LAkBW2xmTht322LVHjmeGGyD971vdJSqfQluCLbwlsGloDsiGKsq0kQUhmVMAZ9MWfrgaIallzy9uwxnHgUnzJBk8FKzoJt7OFoIGuPpWBbeFC2PkXOCjw',
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(
-            //         {"data": ticketBody}
-            //     )
-            // })
-            // .then(response => response.json())
-            // .then(data => {
-            //     severity = data.labelName;
-            //     resultBox.innerHTML = `<p><strong>Ticket submitted!</strong> Severity: ${severity}</p>`;
-            // });
+            await fetch('https://www.nyckel.com/v1/functions/support-request-urgency/invoke', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + 'eyJhbGciOiJSUzI1NiIsInR5cCI6ImF0K2p3dCJ9.eyJpc3MiOiJodHRwczovL3d3dy5ueWNrZWwuY29tIiwibmJmIjoxNzU4NzEyNTIyLCJpYXQiOjE3NTg3MTI1MjIsImV4cCI6MTc1ODcxNjEyMiwic2NvcGUiOlsiYXBpIl0sImNsaWVudF9pZCI6IjFudTJhYWEyajJ6NjR3bHdlMHdmZ3VwM2k5eWQ2d2FtIiwianRpIjoiRjE3MDg4QkI0ODM2ODI2QTk3MTRBRTFEOTJDOTRCMTYifQ.Z4ZopBiT1En821uBx5eqpMJahz7JY_LrJLLOTsbbiVUTOjtp18i5kTTuPrgpTaSk9RIC6Aus5y5f7n3zKaCJ93baCYd6__SBVGa08UBRnlssFEQ_4JVUZNC0qYzpaB0Um99zrNlPLfqFJi5klMXg4-FU9p0Ta8hzYOkMnX5PaaRjeZ8XDeJNy39-V1z4Wl6_Q6Zvyz2Mbq0gqTdICumMUWXSHBW7jekbFOgGq3aBn_3O6BFn2HigTAHHSRPIXILf69AL0359siNZt4ZHJfbOeDDT8yMfStOCCriIcGtLC-6a1C9lm7C_tBaI4RAC20zKosgdyUbzxL1K0NXOdW-dyA',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    {"data": ticketBody}
+                )
+            })
+            .then(response => response.json())
+            .then(data => {
+                severity = data.labelName;
+                resultBox.innerHTML = `<p><strong>Ticket submitted!</strong> Severity: ${severity}</p>`;
+            });
 
             // end of section, if commenting above out, uncomment this below
 
-            severity = "Medium";
-            resultBox.innerHTML = `<p><strong>Ticket submitted!</strong> Severity: ${severity}</p>`;
+            // severity = "Medium";
+            // resultBox.innerHTML = `<p><strong>Ticket submitted!</strong> Severity: ${severity}</p>`;
             
             const options = {
                 method: "POST",

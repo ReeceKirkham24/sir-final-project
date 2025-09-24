@@ -41,6 +41,9 @@ async function login(req, res) {
   const email = req.body.email
   const password = req.body.password
 
+  console.log(email);
+  console.log(password);
+
   
   const response = await User.checkUser(email, password)
   console.log(response)
