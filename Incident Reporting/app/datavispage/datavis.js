@@ -6,7 +6,7 @@ window.onload = async function() {
 			headers:{
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
-				'authorisation': localStorage.getItem("utoken")
+				'authorisation': localStorage.getItem("otoken")
 			}
 		}
 		const response = await fetch('http://localhost:5000/ticket', options);
