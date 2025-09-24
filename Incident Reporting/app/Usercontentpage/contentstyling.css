@@ -158,6 +158,9 @@ button:hover {
   border-radius: 12px;
   text-align: left;
 }
+#ticketcategory {
+  min-height: 60px;
+}
 
 /* ================= Arrow ================= */
 .scroll-arrow {

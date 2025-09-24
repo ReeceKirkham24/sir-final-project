@@ -90,6 +90,10 @@ button:hover { background:#444; }
   background:#fff; border:1px solid #ccc;
   border-radius:12px;
 }
+#ticketcategory {
+  min-height: 60px;
+}
+
 
 /* Admin Tools */
 .admin-tools {

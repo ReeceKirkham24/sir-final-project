@@ -4,11 +4,13 @@ document.addEventListener("DOMContentLoaded", async function () {
   const resultBox = document.getElementById("ticketResult");
   let severity = null;
   let ticketBody = null;
+  let ticketCategory = null
   if (form) {
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
 
       ticketBody = document.getElementById("ticketbody").value;
+      ticketCategory = document.getElementById('ticketcategory').value
       console.log(resultBox);
       console.log(ticketBody);
 
@@ -46,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async function () {
           status: "Open",
           text: ticketBody,
           severity: severity,
-          category: "temp",
+          category: ticketCategory,
 
           date_created: new Date().toISOString(),
           date_completed: null,
