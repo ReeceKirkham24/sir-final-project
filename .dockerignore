@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log
+.git
+coverage
+.vscode
+final-beyster-project.md
+README.md
+*.tf
+*.tfstate
+*.tfstate.*
+.terraform/
