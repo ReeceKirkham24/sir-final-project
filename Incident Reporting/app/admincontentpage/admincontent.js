@@ -76,9 +76,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   const commentResponse = await fetch("http://localhost:5000/comment", options);
   const commentData = await commentResponse.json();
 
-  console.log(ticketsData);
-  console.log(commentData);
-
   const ticketList = document.getElementById("ticketList");
   ticketList.innerHTML = "";
 

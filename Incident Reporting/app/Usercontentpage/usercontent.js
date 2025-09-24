@@ -76,39 +76,104 @@ document.addEventListener('DOMContentLoaded', async function() {
     const ticketResponse = await fetch("http://localhost:5000/ticket", options)
     const ticketsData = await ticketResponse.json();
 
-    console.log(ticketsData);
+    const commentResponse = await fetch("http://localhost:5000/comment", options);
+    const commentData = await commentResponse.json();
 
     const ticketList = document.getElementById('ticketList');
     ticketList.innerHTML = "";
 
-    ticketsData.forEach(ticket => {
-        const ticketDiv = document.createElement('div');
-        ticketDiv.className = 'ticket-item';
-        ticketDiv.id = ticket.id;
-        ticketDiv.setAttribute('data-content', ticket.text || '');
-        ticketDiv.setAttribute('data-severity', ticket.severity || '');
-        ticketDiv.innerText = ticket.text || 'No description';
-        ticketDiv.addEventListener('click', function() {
-            const detailDiv = document.querySelector('.ticket-detail');
-            let completed
-            if(!ticket.date_completed){
-                completed = "Still in progress"
-            }
-            else{
-                completed=new Date(ticket.date_completed).toLocaleString()
-            }
-            detailDiv.innerHTML = `
-                <h3>Ticket Details</h3>
-                <p><strong>Description:</strong> ${ticket.text}</p>
-                <p><strong>Severity:</strong> ${ticket.severity}</p>
-                <p><strong>Status:</strong> ${ticket.status}</p>
-                <p><strong>Category:</strong> ${ticket.category || 'N/A'}</p>
-                <p><strong>Date Created:</strong> ${new Date(ticket.date_created).toLocaleString()}</p>
-                <p><strong>Date Completed:</strong> ${completed}</p>
-            `;
+    ticketsData.forEach((ticket) => {
+    const ticketDiv = document.createElement("div");
+    ticketDiv.className = "ticket-item";
+    ticketDiv.id = ticket.ticket_id;
+    ticketDiv.setAttribute("data-content", ticket.text || "");
+    ticketDiv.setAttribute("data-severity", ticket.severity || "");
+    ticketDiv.innerText = ticket.text || "No description";
+    ticketDiv.addEventListener("click", function () {
+      const detailDiv = document.querySelector(".ticket-detail");
+      let completed;
+      if (!ticket.date_completed) {
+        completed = "Still in progress";
+      } else {
+        completed = new Date(ticket.date_completed).toLocaleString();
+      }
+      const ticketComments = commentData.filter(
+        (comment) => comment.ticket_id === ticket.ticket_id
+      );
+      let commentsHtml = "<div class='comments-section' style='margin-top:32px;'><h3>Comments:</h3>";
+      if (ticketComments.length === 0) {
+        commentsHtml += "<p>No comments for this ticket.</p>";
+      } else {
+        commentsHtml += "<ul style='padding-left:0;'>";
+        ticketComments.forEach((comment) => {
+          commentsHtml += `<li style='list-style:none; margin-bottom:12px;'><strong>${comment.user_name || comment.org_name}:</strong> ${comment.body}</li>`;
         });
-        ticketList.appendChild(ticketDiv);
+        commentsHtml += "</ul>";
+      }
+      commentsHtml += "</div>";
+      detailDiv.innerHTML = `
+        <h3>Ticket Details</h3>
+        <p><strong>Description:</strong> ${ticket.text}</p>
+        <p><strong>Severity:</strong> ${ticket.severity}</p>
+        <p><strong>Status:</strong> ${ticket.status}</p>
+        <p><strong>Category:</strong> ${ticket.category || "N/A"}</p>
+        <p><strong>Date Created:</strong> ${new Date(ticket.date_created).toLocaleString()}</p>
+        <p><strong>Date Completed:</strong> ${completed}</p>
+        ${commentsHtml}
+        <p></p>
+        <h3>Post New Comment:</h3>
+        <form id="commentForm">
+          <textarea id="commentText"></textarea>
+          <button type="submit">Post Comment</button>
+        </form>
+      `;
+      const commentForm = document.getElementById("commentForm");
+      if (commentForm) {
+        commentForm.addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const commentText = document.getElementById("commentText").value;
+          if (!commentText.trim()) {
+            alert("Comment cannot be empty.");
+            return;
+          }
+          const options = {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              authorisation: localStorage.getItem("utoken"),
+              userType: "user"
+            },
+            body: JSON.stringify({
+              ticket_id: ticket.ticket_id,
+              body: commentText,
+            }),
+          };
+          try {
+            const response = await fetch("http://localhost:5000/comment/create", options);
+            if (!response.ok) {
+              const error = await response.json();
+              alert("Error posting comment: " + (error.error || response.status));
+              return;
+            }
+            const newComment = await response.json();
+            const commentsSection = detailDiv.querySelector('.comments-section ul');
+            if (commentsSection) {
+              const li = document.createElement('li');
+              li.style.listStyle = 'none';
+              li.style.marginBottom = '12px';
+              li.innerHTML = `<strong>${newComment.user_name || 'You'}:</strong> ${newComment.body}`;
+              commentsSection.appendChild(li);
+            }
+            commentForm.reset();
+          } catch (err) {
+            alert("Failed to post comment.");
+          }
+        });
+      }
     });
+    ticketList.appendChild(ticketDiv);
+  });
 
     // ---------------- Delete Account Functionality ----------------
     const deleteBtn = document.getElementById('deleteAccountBtn');
